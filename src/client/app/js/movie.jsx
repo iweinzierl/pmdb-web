@@ -11,7 +11,7 @@ const MovieTable = React.createClass({
             );
         });
         return (
-            <div>
+            <div className="movie-table">
                 {movieRows}
             </div>
         );

@@ -6,6 +6,7 @@ import unirest from "unirest";
 
 import styles from "../styles/app.less";
 import Header from "./header.jsx";
+import Menu from "./menu.jsx";
 import {MovieTable} from "./movie.jsx";
 
 const App = React.createClass({
@@ -56,12 +57,9 @@ const App = React.createClass({
     render: function () {
         return (
             <div className="content">
-                <div className="content-item">
-                    <Header user={this.state.user} searchListener={this.searchChanged}/>
-                </div>
-                <div className="content-item">
-                    <MovieTable movies={this.state.filteredMovies}/>
-                </div>
+                <Header user={this.state.user} searchListener={this.searchChanged}/>
+                <Menu/>
+                <MovieTable movies={this.state.filteredMovies}/>
             </div>
         );
     },
