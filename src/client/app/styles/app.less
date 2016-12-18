@@ -1,0 +1,173 @@
+@horizontal-margin: 30px;
+
+@header-content-height: 35px;
+
+body {
+  background-color: rgba(229,229,229,0.31);
+  padding: 0;
+  margin: 0;
+
+  font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size: 81.25%;
+}
+
+div.content {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+div.header {
+  width: 100%;
+  height: 55px;
+
+  background-color: #4285f4;
+
+  display: flex;
+  flex-direction: row;
+
+  align-content: stretch;
+  align-items: center;
+}
+
+div.header-menu {
+  width: 250px;
+}
+
+div.header-menu > h1 {
+  padding-left: @horizontal-margin;
+  margin: 0;
+
+  color: #fff;
+  font-weight: 100;
+  letter-spacing: 3px;
+}
+
+div.header-search {
+  flex-grow: 5;
+}
+
+div.header-user {
+  width: 150px;
+}
+
+div.header-user > img {
+  width: @header-content-height;
+  height: @header-content-height;
+
+  float: right;
+  margin-right: @horizontal-margin;
+
+  border-radius: 17px;
+}
+
+div.search {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  color: #fff;
+}
+
+div.search-icon {
+  height: @header-content-height;
+  width: @header-content-height;
+
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  background: rgba(255,255,255,.15);
+
+  display: flex;
+  align-items: center;
+}
+
+div.search > input {
+  width: 90%;
+  height: @header-content-height;
+
+  padding: 0;
+  margin: 0;
+
+  color: #fff;
+  font-size: 1.2em;
+  font-weight: 100;
+
+  background: rgba(255,255,255,.15);
+  border: none;
+  outline: none;
+}
+
+.movie-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.movie-form-input {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 5px;
+
+  width: 400px;
+  font-size: larger;
+}
+
+div.movie-form-input > input {
+  width: 400px;
+  font-size: large;
+}
+
+div.movie-form-input > select {
+  width: 400px;
+  font-size: large;
+}
+
+div.movie-table {
+  width: 70%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+div.movie {
+  width: 90%;
+  padding: 10px;
+  margin: 10px auto;
+
+  background-color: #ffffff;
+  box-shadow: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.24);
+
+  display: flex;
+  flex-direction: row;
+  align-content: stretch;
+  justify-content: space-around;
+}
+
+div.movie-title {
+  width: 30%;
+}
+
+div.movie-format {
+  width: 10%;
+}
+
+div.movie-length {
+  width: 10%
+}
+
+div.movie-publishdate {
+  width: 20%;
+}
+
+div.movie-genres {
+  width: 30%;
+}
