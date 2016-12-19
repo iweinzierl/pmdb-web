@@ -1,98 +1,169 @@
-import React from "react";
-import {render} from "react-dom";
-import {Creatable} from "react-select";
-import "react-select/dist/react-select.css";
+"use strict";
 
 require("../styles/app.less");
 
+import React from "react";
+import {MoviesResource} from "./http.jsx";
+
 const MovieForm = React.createClass({
+
     getInitialState: function () {
         return {
-            genres: [
-                {value: "Action", label: "Action"},
-                {value: "Comedy", label: "Comedy"},
-                {value: "Horror", label: "Horror"},
-                {value: "Thriller", label: "Thriller"}
+            genresOptions: [
+                "Action",
+                "Comedy",
+                "Drama",
+                "Horror",
+                "Love",
+                "Sci-Fi",
+                "Thriller"
             ],
-            movie: {
-                title: "",
-                genres: "",
-                length: "",
-                format: "",
-                publishDate: ""
+            formatOptions: [
+                {value: "VHS", label: "VHS"},
+                {value: "DVD", label: "DVD"},
+                {value: "BLURAY", label: "BLU-RAY"},
+                {value: "AMAZON_VIDEO", label: "Amazon Video"},
+                {value: "GOOGLE_MOVIES", label: "Google Movies"}
+            ],
+            genres: {
+                "Action": "off",
+                "Comedy": "off",
+                "Drama": "off",
+                "Horror": "off",
+                "Love": "off",
+                "Sci-Fi": "off",
+                "Thriller": "off"
             },
-            multi: true
+            title: "",
+            length: "",
+            publishDate: "",
+            format: ""
         };
     },
 
-    componentDidMount: function () {
+    render: function () {
         const self = this;
-        fetch('/genres')
-            .then(
-                function (response) {
-                    if (response.status !== 200) {
-                        console.log('Error while loading genres from server -> http status ' +
-                            response.status);
-                        return;
-                    }
+        const genresOptions = this.state.genresOptions.map(function (genre) {
+            return (
+                <li key={genre}>
+                    <input type="checkbox" name={genre} value={self.state.genres[genre]}
+                           onChange={self.handleGenres}/>{genre}
+                </li>
+            );
+        });
 
-                    response.json().then(function (data) {
-                        self.setState({
-                            genres: data.map(function (genre) {
-                                return {value: genre, label: genre};
-                            })
-                        });
-                    });
-                }
-            )
-            .catch(function (err) {
-                console.log('Fetch Error :-S', err);
-            });
+        const formatOptions = this.state.formatOptions.map(function (format) {
+            return (
+                <option key={format.value} name={format.value} value={format.value}>{format.label}</option>
+            );
+        });
+
+        return (
+            <div className="movie-form">
+                <div className="movie-form-left">
+                    <div className="movie-form-input">
+                        <label>Title</label>
+                        <input type="text" value={this.state.title} placeholder="Title"
+                               onChange={this.handleTitle}/>
+                    </div>
+
+                    <div className="movie-form-input">
+                        <label>Length</label>
+                        <input type="text" value={this.state.length} placeholder="Length in minutes"
+                               onChange={this.handleLength}/>
+                    </div>
+
+                    <div className="movie-form-input">
+                        <label>Release Date</label>
+                        <input type="text" value={this.state.publishDate}
+                               placeholder="Published at (yyyy-MM-dd)" onChange={this.handlePublishDate}/>
+                    </div>
+                </div>
+                <div className="movie-form-right">
+                    <div className="movie-form-input">
+                        <label>Genres</label>
+                        <ul key="genres">
+                            {genresOptions}
+                        </ul>
+                    </div>
+                    <div className="movie-form-input">
+                        <label>Format</label>
+                        <select value={this.state.format} onChange={this.handleFormat}>
+                            <option name="undefined" value="undefined">choose ...</option>
+                            {formatOptions}
+                        </select>
+                    </div>
+                </div>
+
+                <div className="button" onClick={this.onSubmit}>
+                    Save
+                </div>
+            </div>
+        );
     },
 
-    handleOnChange: function (value) {
-        var movie = this.state.movie;
-        movie.genres = value;
-        this.setState({movie: movie});
+    handleTitle: function (evt) {
+        this.setState({
+            title: evt.target.value
+        });
+    },
+
+    handleLength: function (evt) {
+        this.setState({
+            length: evt.target.value
+        });
+    },
+
+    handlePublishDate: function (evt) {
+        this.setState({
+            publishDate: evt.target.value
+        });
+    },
+
+    handleFormat: function (evt) {
+        this.setState({
+            format: evt.target.value
+        });
+    },
+
+    handleGenres: function (evt) {
+        const genres = this.state.genres;
+
+        if (evt.target.value == "off") {
+            genres[evt.target.name] = "on";
+        }
+        else {
+            genres[evt.target.name] = "off";
+        }
+
+        this.setState({
+            genres: genres
+        });
     },
 
     onSubmit: function () {
-        console.log("Title: " + self.title)
-    },
+        const genres = [];
+        Object.entries(this.state.genres).forEach(function ([genre, selected]) {
+            if (selected == "on") {
+                genres.push({name: genre});
+            }
+        });
 
-    render: function () {
-        const {genres, movie, multi} = this.state;
-        return (
-            <div className="movie-form">
+        const movie = {
+            title: this.state.title,
+            length: this.state.length,
+            publishDate: this.state.publishDate,
+            genres: genres,
+            format: this.state.format
+        };
 
-                <div className="movie-form-input">
-                    <input type="text" value={this.state.movie.title} placeholder="Title"/>
-                </div>
+        console.log(movie);
 
-                <div className="movie-form-input">
-                    <input type="text" value={this.state.movie.length} placeholder="Length in minutes"/>
-                </div>
-
-                <div className="movie-form-input">
-                    <input type="text" value={this.state.movie.publishDate} placeholder="Published at (yyyy-MM-dd)"/>
-                </div>
-
-                <div className="movie-form-input">
-                    <Creatable options={genres} multi={multi} value={this.state.movie.genres}
-                               onChange={this.handleOnChange}/>
-                </div>
-
-                <div className="movie-form-input">
-                    <select value={this.state.movie.format}>
-                        <option>Format</option>
-                        <option>VHS</option>
-                        <option>DVD</option>
-                        <option>BLU-RAY</option>
-                    </select>
-                </div>
-
-                <input type="submit" value="Save" onClick={this.onSubmit}/>
-            </div>
+        new MoviesResource(this.props.applicationState.accessToken).post(
+            movie,
+            function (data) {
+                console.log(data);
+            }
         );
     }
 });

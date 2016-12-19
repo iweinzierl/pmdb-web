@@ -1,7 +1,9 @@
 "use strict";
 
+require("../styles/app.less");
+
 import React from "react";
-import unirest from "unirest";
+import {GenresResource} from "./http.jsx";
 
 const Menu = React.createClass({
 
@@ -9,8 +11,10 @@ const Menu = React.createClass({
         return (
             <div className="menu">
                 <div className="menu-sub">
-                    <MenuItem icon="/public/ic_list_black_36dp_1x.png" title="List"/>
-                    <MenuItem icon="/public/ic_create_black_36dp_1x.png" title="Create"/>
+                    <MenuItem icon="/public/ic_list_black_36dp_1x.png" title="List" route="/index.html"
+                              applicationState={this.props.applicationState}/>
+                    <MenuItem icon="/public/ic_create_black_36dp_1x.png" title="Create" route="/add.html"
+                              applicationState={this.props.applicationState}/>
                 </div>
                 <div className="menu-sub">
                     <GenreFilter applicationState={this.props.applicationState}/>
@@ -35,9 +39,7 @@ const MenuItem = React.createClass({
     },
 
     select: function () {
-        this.setState({
-            css: "menu-item-selected"
-        })
+        window.location = this.props.route + "#access_token=" + this.props.applicationState.accessToken;
     }
 });
 
@@ -59,32 +61,22 @@ const GenreFilter = React.createClass({
 
     componentDidMount: function () {
         const self = this;
-        const request = unirest.get("http://localhost:9000/genres");
-        request.headers({
-            "Accept": "application/json",
-            "X-Authorization": this.props.applicationState.accessToken
-        });
-        request.end(function (response) {
-            if (response.body === undefined) {
-                return;
+        new GenresResource(this.props.applicationState.accessToken).get(
+            function (data) {
+                if (data.length > 0) {
+                    self.setState({
+                        genres: data
+                    });
+                }
             }
-
-            const genres = response.body.map(function (genre) {
-                return genre.name;
-            });
-
-            if (genres.length > 0) {
-                self.setState({
-                    genres: genres
-                });
-            }
-        });
+        );
     },
 
     render: function () {
         const genresList = this.state.genres.map(function (genre) {
+            const liKey = "li-" + genre;
             return (
-                <li key={genre}><input type="checkbox" name="genre" value={genre}/>{genre}</li>
+                <li key={liKey}><input type="checkbox" name="genre" key={genre} value={genre}/>{genre}</li>
             );
         });
 

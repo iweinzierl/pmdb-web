@@ -26,13 +26,17 @@ const MovieTable = React.createClass({
 const MovieRow = React.createClass({
 
     render: function () {
+        const genres = this.props.movie.genres
+            .map(function(genre) { return genre.name; })
+            .join(" ");
+
         return (
             <div className="movie">
                 <div className="movie-title">{this.props.movie.title}</div>
                 <div className="movie-format">{this.props.movie.format}</div>
-                <div className="movie-length">{this.props.movie.length}</div>
+                <div className="movie-length">{this.props.movie.length} min</div>
                 <div className="movie-publishdate">{this.props.movie.publishDate}</div>
-                <div className="movie-genres">{this.props.movie.genres}</div>
+                <div className="movie-genres">{genres}</div>
             </div>
         );
     }

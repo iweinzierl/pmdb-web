@@ -15,7 +15,8 @@ var config =
         },
         entry: {
             index: APP_DIR + '/js/index.jsx',
-            login: APP_DIR + '/js/login.jsx'
+            login: APP_DIR + '/js/login.jsx',
+            add: APP_DIR + '/js/add.jsx'
         },
         output: {
             path: BUILD_DIR,
