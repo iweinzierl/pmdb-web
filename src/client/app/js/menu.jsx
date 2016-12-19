@@ -13,10 +13,10 @@ const Menu = React.createClass({
                     <MenuItem icon="/public/ic_create_black_36dp_1x.png" title="Create"/>
                 </div>
                 <div className="menu-sub">
-                    <GenreFilter />
+                    <GenreFilter applicationState={this.props.applicationState}/>
                 </div>
                 <div className="menu-sub">
-                    <FormatFilter />
+                    <FormatFilter applicationState={this.props.applicationState}/>
                 </div>
             </div>
         );
@@ -62,7 +62,7 @@ const GenreFilter = React.createClass({
         const request = unirest.get("http://localhost:9000/genres");
         request.headers({
             "Accept": "application/json",
-            "X-Authorization": "ya29.Ci-4A49US8SRGyYxCV5xMFu4TAx3mZubs1mKHKsDnHYBpQ8ORDfoOt79wCUO_INNrQ"
+            "X-Authorization": this.props.applicationState.accessToken
         });
         request.end(function (response) {
             if (response.body === undefined) {

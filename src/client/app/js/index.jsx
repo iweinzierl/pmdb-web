@@ -13,11 +13,13 @@ const App = React.createClass({
 
     getInitialState: function () {
         return ({
-            accessToken: undefined,
             user: undefined,
             movies: [],
             filter: undefined,
-            filteredMovies: []
+            filteredMovies: [],
+            applicationState: {
+                accessToken: undefined
+            }
         });
     },
 
@@ -31,8 +33,11 @@ const App = React.createClass({
         }
 
         if (params["access_token"] !== undefined) {
+            let applicationState = this.state.applicationState;
+            applicationState.accessToken = params["access_token"];
+
             this.setState({
-                accessToken: params["access_token"]
+                applicationState: applicationState
             }, function () {
                 this.authenticationVerified();
             });
@@ -41,12 +46,8 @@ const App = React.createClass({
         }
     },
 
-    componentDidMount: function () {
+    componentWillMount: function () {
         this.parseAccessToken();
-
-        if (this.state.accessToken !== undefined) {
-            console.log("Access Token: " + this.state.accessToken);
-        }
     },
 
     authenticationVerified: function () {
@@ -58,7 +59,7 @@ const App = React.createClass({
         return (
             <div className="content">
                 <Header user={this.state.user} searchListener={this.searchChanged}/>
-                <Menu/>
+                <Menu applicationState={this.state.applicationState}/>
                 <MovieTable movies={this.state.filteredMovies}/>
             </div>
         );
@@ -71,7 +72,7 @@ const App = React.createClass({
         const request = unirest.get('http://localhost:9000/movies');
         request.headers({
             'Accept': 'application/json',
-            'X-Authorization': this.state.accessToken
+            'X-Authorization': this.state.applicationState.accessToken
         });
         request.end(function (response) {
             self.setState({
@@ -89,7 +90,7 @@ const App = React.createClass({
         const request = unirest.get('http://localhost:9000/user');
         request.headers({
             'Accept': 'application/json',
-            'X-Authorization': this.state.accessToken
+            'X-Authorization': this.state.applicationState.accessToken
         });
         request.end(function (response) {
             self.setState({
