@@ -5,11 +5,16 @@ import React from "react";
 const MovieTable = React.createClass({
 
     render: function () {
-        const movieRows = this.props.movies.map(function (movie) {
-            return (
-                <MovieRow key={movie.id} movie={movie}/>
-            );
-        });
+        let movieRows = [];
+
+        if (this.props.movies !== undefined) {
+            movieRows = this.props.movies.map(function (movie) {
+                return (
+                    <MovieRow key={movie.id} movie={movie}/>
+                );
+            });
+        }
+
         return (
             <div className="movie-table">
                 {movieRows}
