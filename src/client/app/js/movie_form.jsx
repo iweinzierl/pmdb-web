@@ -3,7 +3,9 @@
 require("../styles/app.less");
 
 import React from "react";
+import {MovieTable} from "./movie.jsx";
 import {MoviesResource} from "./http.jsx";
+import {MovieSearchResource} from "./http.jsx";
 
 const MovieForm = React.createClass({
 
@@ -25,19 +27,43 @@ const MovieForm = React.createClass({
                 {value: "AMAZON_VIDEO", label: "Amazon Video"},
                 {value: "GOOGLE_MOVIES", label: "Google Movies"}
             ],
+            suggestions: [],
             genres: {
-                "Action": "off",
-                "Comedy": "off",
-                "Drama": "off",
-                "Horror": "off",
-                "Love": "off",
-                "Sci-Fi": "off",
-                "Thriller": "off"
+                "Action": {
+                    value: "off",
+                    checked: false
+                },
+                "Comedy": {
+                    value: "off",
+                    checked: false
+                },
+                "Drama": {
+                    value: "off",
+                    checked: false
+                },
+                "Horror": {
+                    value: "off",
+                    checked: false
+                },
+                "Love": {
+                    value: "off",
+                    checked: false
+                },
+                "Sci-Fi": {
+                    value: "off",
+                    checked: false
+                },
+                "Thriller": {
+                    value: "off",
+                    checked: false
+                }
             },
             title: "",
             length: "",
             publishDate: "",
-            format: ""
+            format: "",
+            description: "",
+            coverUrl: ""
         };
     },
 
@@ -45,10 +71,12 @@ const MovieForm = React.createClass({
         const self = this;
         const genresOptions = this.state.genresOptions.map(function (genre) {
             return (
-                <li key={genre}>
-                    <input type="checkbox" name={genre} value={self.state.genres[genre]}
-                           onChange={self.handleGenres}/>{genre}
-                </li>
+                <div key={genre}>
+                    <input type="checkbox" name={genre} value={self.state.genres[genre].value}
+                           checked={self.state.genres[genre].checked}
+                           onChange={self.handleGenres}/>
+                    <span>{genre}</span>
+                </div>
             );
         });
 
@@ -59,47 +87,119 @@ const MovieForm = React.createClass({
         });
 
         return (
-            <div className="movie-form">
-                <div className="movie-form-left">
-                    <div className="movie-form-input">
-                        <label>Title</label>
-                        <input type="text" value={this.state.title} placeholder="Title"
-                               onChange={this.handleTitle}/>
+            <div className="movie-form-wrapper">
+                <div className="movie-form">
+
+                    <div className="movie-form-left">
+                        <div className="movie-form-input">
+                            <label>Title</label>
+                            <input type="text" value={this.state.title} placeholder="Title"
+                                   onChange={this.handleTitle}/>
+                        </div>
+
+                        <div className="movie-form-input">
+                            <label>Length</label>
+                            <input type="text" value={this.state.length} placeholder="Length in minutes"
+                                   onChange={this.handleLength}/>
+                        </div>
+
+                        <div className="movie-form-input">
+                            <label>Release Date</label>
+                            <input type="text" value={this.state.publishDate}
+                                   placeholder="Published at (yyyy-MM-dd)" onChange={this.handlePublishDate}/>
+                        </div>
+
+                        <div className="movie-form-input">
+                            <label>Description</label>
+                            <textarea value={this.state.description} onChange={this.handleDescription}/>
+                        </div>
                     </div>
 
-                    <div className="movie-form-input">
-                        <label>Length</label>
-                        <input type="text" value={this.state.length} placeholder="Length in minutes"
-                               onChange={this.handleLength}/>
-                    </div>
-
-                    <div className="movie-form-input">
-                        <label>Release Date</label>
-                        <input type="text" value={this.state.publishDate}
-                               placeholder="Published at (yyyy-MM-dd)" onChange={this.handlePublishDate}/>
-                    </div>
-                </div>
-                <div className="movie-form-right">
-                    <div className="movie-form-input">
-                        <label>Genres</label>
-                        <ul key="genres">
+                    <div className="movie-form-right">
+                        <div className="movie-form-cover">
+                            <img src={this.state.coverUrl}/>
+                            <input type="text" value={this.state.coverUrl} placeholder="http://cover.movie.org"
+                                   onChange={this.handleCoverUrl}/>
+                        </div>
+                        <div className="movie-form-genres-group">
+                            <label>Genres</label>
                             {genresOptions}
-                        </ul>
-                    </div>
-                    <div className="movie-form-input">
-                        <label>Format</label>
-                        <select value={this.state.format} onChange={this.handleFormat}>
-                            <option name="undefined" value="undefined">choose ...</option>
-                            {formatOptions}
-                        </select>
+                        </div>
+                        <div className="movie-form-input">
+                            <label>Format</label>
+                            <select value={this.state.format} onChange={this.handleFormat}>
+                                <option name="undefined" value="undefined">choose ...</option>
+                                {formatOptions}
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                <div className="button" onClick={this.onSubmit}>
-                    Save
+                <div className="movie-form-buttons">
+                    <div className="button" onClick={this.search}>
+                        Search
+                    </div>
+
+                    <div className="button" onClick={this.onSubmit}>
+                        Save
+                    </div>
+                </div>
+
+                <div className="movie-form-suggestions">
+                    <MovieTable movies={this.state.suggestions} onMovieClickListener={this.onSuggestionClicked}/>
                 </div>
             </div>
         );
+    },
+
+    onSuggestionClicked: function (movie) {
+        console.log("Clicked suggestion:");
+        console.log(movie);
+
+        const self = this;
+
+        new MovieSearchResource(this.props.applicationState.accessToken).get(
+            movie.id,
+            function (movieDetails) {
+                self.applySuggestion(movieDetails);
+            }
+        );
+    },
+
+    applySuggestion: function (movie) {
+        const genresOptions = this.state.genresOptions;
+        const genres = this.state.genres;
+        movie.genres.forEach(function (genre) {
+            genres[genre] = {
+                value: "on",
+                checked: true
+            };
+
+            if (genresOptions.indexOf(genre) < 0) {
+                genresOptions.push(genre);
+            }
+        });
+
+        this.setState({
+            title: movie.title,
+            publishDate: this.convertPublishDate(movie.published),
+            length: movie.length,
+            genres: genres,
+            genresOptions: genresOptions,
+            coverUrl: movie.coverUrl,
+            description: movie.description
+        });
+    },
+
+    convertPublishDate: function (publishDate) {
+        if (publishDate === undefined || publishDate === null || typeof publishDate !== "object" || publishDate.length < 3) {
+            return "";
+        }
+
+        const month = publishDate[1] < 10 ? "0" + publishDate[1] : publishDate[1];
+        const day = publishDate[2] < 10 ? "0" + publishDate[2] : publishDate[2];
+
+        return publishDate[0] + "-" + month + "-" + day;
     },
 
     handleTitle: function (evt) {
@@ -117,6 +217,12 @@ const MovieForm = React.createClass({
     handlePublishDate: function (evt) {
         this.setState({
             publishDate: evt.target.value
+        });
+    },
+
+    handleDescription: function (evt) {
+        this.setState({
+            description: evt.target.value
         });
     },
 
@@ -141,10 +247,16 @@ const MovieForm = React.createClass({
         });
     },
 
+    handleCoverUrl: function (evt) {
+        this.setState({
+            coverUrl: evt.target.value
+        });
+    },
+
     onSubmit: function () {
         const genres = [];
-        Object.entries(this.state.genres).forEach(function ([genre, selected]) {
-            if (selected == "on") {
+        Object.entries(this.state.genres).forEach(function ([genre, state]) {
+            if (state.value == "on") {
                 genres.push({name: genre});
             }
         });
@@ -154,7 +266,9 @@ const MovieForm = React.createClass({
             length: this.state.length,
             publishDate: this.state.publishDate,
             genres: genres,
-            format: this.state.format
+            format: this.state.format,
+            coverUrl: this.state.coverUrl,
+            description: this.state.description
         };
 
         console.log(movie);
@@ -163,6 +277,29 @@ const MovieForm = React.createClass({
             movie,
             function (data) {
                 console.log(data);
+            }
+        );
+    },
+
+    search: function () {
+        const self = this;
+        const movieSuggestions = [];
+
+        new MovieSearchResource(this.props.applicationState.accessToken).search(
+            this.state.title,
+            function (movies) {
+                movies.forEach(function (movie) {
+                    movieSuggestions.push({
+                        id: movie.id,
+                        title: movie.title,
+                        length: "",
+                        genres: movie.genres
+                    });
+                });
+
+                self.setState({
+                    suggestions: movieSuggestions
+                });
             }
         );
     }

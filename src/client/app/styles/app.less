@@ -184,8 +184,17 @@ div.menu-item > span {
   text-transform: capitalize;
 }
 
-.movie-form {
+.movie-form-wrapper {
   width: 80%;
+
+  padding-left: @horizontal-margin;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.movie-form {
+  width: 100%;
 
   margin-top: @vertical-margin;
   margin-left: auto;
@@ -212,6 +221,22 @@ div.menu-item > span {
   margin-left: @horizontal-margin;
 }
 
+.movie-form-buttons {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.movie-form-buttons > * {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.movie-form-suggestions {
+  width: 100%;
+}
+
 .movie-form-input {
   display: flex;
   flex-direction: column;
@@ -234,6 +259,13 @@ div.movie-form-input > input {
   padding: 8px;
 }
 
+div.movie-form-input > textarea {
+  width: 400px;
+  font-size: initial;
+
+  padding: 8px;
+}
+
 div.movie-form-input > select {
   width: 400px;
   font-size: large;
@@ -242,6 +274,55 @@ div.movie-form-input > select {
 div.movie-form-input > ul > li {
   padding: 0;
   margin: 0;
+}
+
+div.movie-form-cover {
+  margin-bottom: 30px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+div.movie-form-cover > img {
+  width: 150px;
+  height: 150px;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+div.movie-form-cover > input {
+  width: 400px;
+  font-size: initial;
+
+  padding: 8px;
+}
+
+div.movie-form-genres-group {
+  height: 100px;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  font-size: larger;
+
+  margin-bottom: 30px;
+}
+
+div.movie-form-genres-group > div {
+  padding: 8px;
+}
+
+div.movie-form-genres-group > div > * {
+  padding: 4px;
+}
+
+div.movie-form-genres-group > label {
+  width: 100%;
+
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 div.movie-table {
