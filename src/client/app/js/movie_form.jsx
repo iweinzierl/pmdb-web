@@ -3,6 +3,8 @@
 require("../styles/app.less");
 
 import React from "react";
+import alertify from "alertify.js";
+
 import {MovieTable} from "./movie.jsx";
 import {MoviesResource} from "./http.jsx";
 import {MovieSearchResource} from "./http.jsx";
@@ -271,12 +273,10 @@ const MovieForm = React.createClass({
             description: this.state.description
         };
 
-        console.log(movie);
-
         new MoviesResource(this.props.applicationState.accessToken).post(
             movie,
             function (data) {
-                console.log(data);
+                alertify.success("Movie added!");
             }
         );
     },
@@ -299,6 +299,8 @@ const MovieForm = React.createClass({
 
                 self.setState({
                     suggestions: movieSuggestions
+                }, function () {
+                    alertify.log("Suggestions loaded.");
                 });
             }
         );
