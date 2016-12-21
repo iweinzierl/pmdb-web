@@ -2,6 +2,7 @@
   "pmdb": {
     "paths": {
       "login": "http://localhost:8000/login.html",
+      "index": "http://localhost:8000",
       "user": "http://localhost:9000/user",
       "movies": "http://localhost:9000/movies",
       "genres": "http://localhost:9000/genres"

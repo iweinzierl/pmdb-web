@@ -1,5 +1,7 @@
 "use strict";
 
+const config = require("../../../../config.json");
+
 import React from "react";
 import {render} from "react-dom";
 
@@ -8,7 +10,7 @@ const LoginButton = React.createClass({
     getInitialState: function () {
         return {
             baseUrl: "https://accounts.google.com/o/oauth2/v2/auth",
-            redirectUri: "http://localhost:8000",
+            redirectUri: config.pmdb.paths.index,
             clientId: "590281041484-kfh0l2a24qmvpt2b9f8d2gr16jt1stek.apps.googleusercontent.com",
             scopes: [
                 "email"
@@ -23,7 +25,7 @@ const LoginButton = React.createClass({
     },
 
     login: function () {
-        let url = "" + this.state.baseUrl
+        const url = "" + this.state.baseUrl
             + "?redirect_uri=" + this.state.redirectUri
             + "&response_type=token"
             + "&scope=email"
