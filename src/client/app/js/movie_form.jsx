@@ -97,7 +97,7 @@ class MovieForm extends React.Component {
                         <div className="movie-form-input">
                             <label>Title</label>
                             <input type="text" value={this.state.title} placeholder="Title"
-                                   onChange={this.handleTitle.bind(this)}/>
+                                   onChange={this.handleTitle.bind(this)} onKeyPress={this.handleTitleEnter.bind(this)}/>
                         </div>
 
                         <div className="movie-form-input">
@@ -202,6 +202,12 @@ class MovieForm extends React.Component {
         return publishDate[0] + "-" + month + "-" + day;
     }
 
+    handleTitleEnter(evt) {
+        if (evt.key === 'Enter') {
+            this.search();
+        }
+    }
+
     handleTitle(evt) {
         this.setState({
             title: evt.target.value
@@ -281,22 +287,14 @@ class MovieForm extends React.Component {
 
     search() {
         const self = this;
-        const movieSuggestions = [];
+
+        alertify.log("Searching for movie...");
 
         new MovieSearchResource(this.props.applicationState.accessToken).search(
             this.state.title,
             function (movies) {
-                movies.forEach(function (movie) {
-                    movieSuggestions.push({
-                        id: movie.id,
-                        title: movie.title,
-                        length: "",
-                        genres: movie.genres
-                    });
-                });
-
                 self.setState({
-                    suggestions: movieSuggestions
+                    suggestions: movies
                 }, function () {
                     alertify.log("Suggestions loaded.");
                 });

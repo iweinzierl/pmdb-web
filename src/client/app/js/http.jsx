@@ -199,7 +199,15 @@ MovieSearchResource.prototype.search = function (title, successCallback, errorCa
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
-                    successCallback(data);
+                    successCallback(data.map((result) => {
+                        return {
+                            id: result.id,
+                            title: result.title,
+                            length: result.length,
+                            coverUrl: result.coverUrl,
+                            genres: result.genres.map((genre) => { return {id: null, name: genre}; })
+                        }
+                    }));
                 });
             }
         })

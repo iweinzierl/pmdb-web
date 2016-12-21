@@ -13,8 +13,10 @@ class MovieTable extends React.Component {
 
         if (this.props.movies !== undefined) {
             movieRows = this.props.movies.map(function (movie) {
+                const movieKey = movie.id + "#" + movie.title;
+
                 return (
-                    <MovieRow applicationState={self.props.applicationState} key={movie.id} movie={movie}
+                    <MovieRow applicationState={self.props.applicationState} key={movieKey} movie={movie}
                               onMovieClickListener={self.props.onMovieClickListener}
                               onMovieDeleteListener={self.props.onMovieDeleteListener}/>
                 );
@@ -34,13 +36,6 @@ MovieTable.propTypes = {
     onMovieDeleteListener: React.PropTypes.func
 };
 
-MovieTable.defaultProps = {
-    onMovieClickListener: () => {
-    },
-    onMovieDeleteListener: () => {
-    }
-};
-
 /**
  * React Component to render a single row in a list of Movies.
  */
@@ -49,7 +44,10 @@ class MovieRow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            displayActions: "none"
+            displayActions: "none",
+            style: {
+                cursor: props.onMovieClickListener === undefined ? "default" : "pointer"
+            }
         };
     }
 
@@ -61,14 +59,17 @@ class MovieRow extends React.Component {
             .join(" ");
 
         return (
-            <div className="movie" onClick={this.onClick.bind(this)} onMouseOver={this.onMouseOver.bind(this)}
+            <div style={this.state.style} className="movie" onClick={this.onClick.bind(this)} onMouseOver={this.onMouseOver.bind(this)}
                  onMouseLeave={this.onMouseOut.bind(this)}>
                 <div className="movie-content">
-                    <div className="movie-title">{this.props.movie.title}</div>
-                    <div className="movie-format">{this.props.movie.format}</div>
-                    <div className="movie-length">{this.props.movie.length} min</div>
-                    <div className="movie-publishdate">{this.props.movie.publishDate}</div>
-                    <div className="movie-genres">{genres}</div>
+                    <div className="movie-cell movie-cover">
+                        <img src={this.props.movie.coverUrl}/>
+                    </div>
+                    <div className="movie-cell movie-title">{this.props.movie.title}</div>
+                    <div className="movie-cell movie-format">{this.props.movie.format}</div>
+                    <div className="movie-cell movie-length">{this.props.movie.length} min</div>
+                    <div className="movie-cell movie-publishdate">{this.props.movie.publishDate}</div>
+                    <div className="movie-cell movie-genres">{genres}</div>
                 </div>
                 <MovieActionBar applicationState={this.props.applicationState} movie={this.props.movie}
                                 display={this.state.displayActions}
@@ -78,7 +79,9 @@ class MovieRow extends React.Component {
     }
 
     onClick() {
-        this.props.onMovieClickListener(this.props.movie);
+        if (this.props.onMovieClickListener !== undefined && this.props.onMovieClickListener !== null) {
+            this.props.onMovieClickListener(this.props.movie);
+        }
     }
 
     onMouseOver() {
@@ -99,40 +102,34 @@ MovieRow.propTypes = {
     onMovieDeleteListener: React.PropTypes.func
 };
 
-MovieRow.defaultProps = {
-    onMovieClickListener: () => {
-    },
-    onMovieDeleteListener: () => {
-    }
-};
-
 /**
  * React Component to render a group of action buttons.
  */
 class MovieActionBar extends React.Component {
 
     render() {
+        let deleteAction = null;
+        if (this.props.onMovieDeleteListener !== undefined && this.props.onMovieDeleteListener !== null) {
+            deleteAction = <MovieAction applicationState={this.props.applicationState}
+                                        onClickListener={this.deleteMovie.bind(this)}
+                                        imgSrc="http://ssl.gstatic.com/bt/C3341AA7A1A076756462EE2E5CD71C11/2x/btw_ic_mark_trash_black_24dp_2x.png"/>
+        }
         return (
             <div className="movie-action-bar" style={{display: this.props.display}}>
-                <MovieAction applicationState={this.props.applicationState}
-                             onClickListener={this.deleteMovie.bind(this)}
-                             imgSrc="http://ssl.gstatic.com/bt/C3341AA7A1A076756462EE2E5CD71C11/2x/btw_ic_mark_trash_black_24dp_2x.png"/>
+                {deleteAction}
             </div>
         );
     }
 
     deleteMovie() {
-        this.props.onMovieDeleteListener(this.props.movie);
+        if (this.props.onMovieDeleteListener !== undefined && this.props.onMovieDeleteListener !== null) {
+            this.props.onMovieDeleteListener(this.props.movie);
+        }
     }
 }
 
 MovieActionBar.propTypes = {
     onMovieDeleteListener: React.PropTypes.func
-};
-
-MovieActionBar.defaultProps = {
-    onMovieDeleteListener: () => {
-    }
 };
 
 /**

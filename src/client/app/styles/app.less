@@ -9,6 +9,8 @@
 @vertical-margin: 15px;
 @horizontal-margin-list: 15px;
 
+@movie-row-height: 75px;
+
 @header-content-height: 35px;
 
 body {
@@ -336,7 +338,7 @@ div.movie-table {
 
 div.movie {
   width: 90%;
-  height: 40px;
+  height: @movie-row-height;
 
   padding: 8px;
   margin: 10px auto;
@@ -346,6 +348,15 @@ div.movie {
 
   display: flex;
   flex-direction: row;
+}
+
+div.movie-cell {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+div.movie-cell:first-child {
+  padding-left: 0;
 }
 
 div.movie-content {
@@ -360,6 +371,16 @@ div.movie-content {
   flex-grow: 1;
   flex-shrink: 1;
   flex-basis: 0;
+}
+
+div.movie-cover {
+  width: @movie-row-height;
+  height: @movie-row-height;
+}
+
+div.movie-cover > img {
+  width: @movie-row-height;
+  height: @movie-row-height;
 }
 
 div.movie-title {
@@ -383,13 +404,14 @@ div.movie-genres {
 }
 
 div.movie-action-bar {
-  height: 24px;
+  height: @movie-row-height;
 
   position: relative;
   top: 0;
   right: 0;
 
   justify-content: flex-end;
+  align-items: center;
 }
 
 div.movie-action {
