@@ -1,18 +1,22 @@
 "use strict";
 
+require("../styles/app.less");
+
 import React from "react";
 import {render} from "react-dom";
 
-import styles from "../styles/app.less";
+import alertify from "alertify.js";
+
 import Header from "./header.jsx";
 import Menu from "./menu.jsx";
 import {MovieTable} from "./movie.jsx";
 import {MoviesResource} from "./http.jsx";
 
-const App = React.createClass({
+class App extends React.Component {
 
-    getInitialState: function () {
-        return ({
+    constructor(props) {
+        super(props);
+        this.state = {
             user: undefined,
             movies: [],
             filter: undefined,
@@ -20,10 +24,10 @@ const App = React.createClass({
             applicationState: {
                 accessToken: undefined
             }
-        });
-    },
+        };
+    }
 
-    parseAccessToken: function () {
+    parseAccessToken() {
         const params = {};
         const queryString = location.hash.substring(1);
         let regex = /([^&=]+)=([^&]*)/g, m;
@@ -44,28 +48,52 @@ const App = React.createClass({
         } else {
             window.location = "/login.html";
         }
-    },
+    }
 
-    componentWillMount: function () {
+    componentWillMount() {
         this.parseAccessToken();
-    },
+    }
 
-    authenticationVerified: function () {
+    authenticationVerified() {
         this.updateMovies();
-    },
+    }
 
-    render: function () {
+    render() {
         return (
             <div className="content">
                 <Header applicationState={this.state.applicationState} user={this.state.user}
-                        searchListener={this.searchChanged}/>
+                        searchListener={this.searchChanged.bind(this)}/>
                 <Menu applicationState={this.state.applicationState}/>
-                <MovieTable applicationState={this.state.applicationState} movies={this.state.filteredMovies}/>
+                <MovieTable applicationState={this.state.applicationState} movies={this.state.filteredMovies}
+                            onMovieDeleteListener={this.deleteMovie.bind(this)}/>
             </div>
         );
-    },
+    }
 
-    updateMovies: function () {
+    deleteMovie(movie) {
+        const self = this;
+        alertify.confirm(
+            "Really delete movie '" + movie.title + "'?",
+            () => {
+                new MoviesResource(self.state.applicationState.accessToken).delete(
+                    movie,
+                    () => {
+                        const updatedMovieList = this.state.movies.filter((current) => {
+                            return current.id != movie.id
+                        });
+
+                        this.setState({
+                            movies: updatedMovieList
+                        }, () => self.filter());
+
+                        alertify.success("Successfully deleted movie.");
+                    }
+                );
+            }
+        );
+    }
+
+    updateMovies() {
         const self = this;
         new MoviesResource(this.state.applicationState.accessToken).get(
             function (data) {
@@ -76,17 +104,17 @@ const App = React.createClass({
                 });
             }
         );
-    },
+    }
 
-    searchChanged: function (searchValue) {
+    searchChanged(searchValue) {
         this.setState({
             filter: searchValue
         }, function () {
             this.filter();
         })
-    },
+    }
 
-    filter: function () {
+    filter() {
         if (this.state.filter === undefined || this.state.filter == "") {
             this.setState({
                 filteredMovies: this.state.movies
@@ -103,6 +131,6 @@ const App = React.createClass({
             filteredMovies: newFilteredMovies
         });
     }
-});
+}
 
 render(<App/>, document.getElementById('app'));

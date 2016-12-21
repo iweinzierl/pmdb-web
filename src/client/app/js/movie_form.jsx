@@ -9,10 +9,11 @@ import {MovieTable} from "./movie.jsx";
 import {MoviesResource} from "./http.jsx";
 import {MovieSearchResource} from "./http.jsx";
 
-const MovieForm = React.createClass({
+class MovieForm extends React.Component {
 
-    getInitialState: function () {
-        return {
+    constructor(props) {
+        super(props);
+        this.state = {
             genresOptions: [
                 "Action",
                 "Comedy",
@@ -67,9 +68,9 @@ const MovieForm = React.createClass({
             description: "",
             coverUrl: ""
         };
-    },
+    }
 
-    render: function () {
+    render() {
         const self = this;
         const genresOptions = this.state.genresOptions.map(function (genre) {
             return (
@@ -96,24 +97,24 @@ const MovieForm = React.createClass({
                         <div className="movie-form-input">
                             <label>Title</label>
                             <input type="text" value={this.state.title} placeholder="Title"
-                                   onChange={this.handleTitle}/>
+                                   onChange={this.handleTitle.bind(this)}/>
                         </div>
 
                         <div className="movie-form-input">
                             <label>Length</label>
                             <input type="text" value={this.state.length} placeholder="Length in minutes"
-                                   onChange={this.handleLength}/>
+                                   onChange={this.handleLength.bind(this)}/>
                         </div>
 
                         <div className="movie-form-input">
                             <label>Release Date</label>
                             <input type="text" value={this.state.publishDate}
-                                   placeholder="Published at (yyyy-MM-dd)" onChange={this.handlePublishDate}/>
+                                   placeholder="Published at (yyyy-MM-dd)" onChange={this.handlePublishDate.bind(this)}/>
                         </div>
 
                         <div className="movie-form-input">
                             <label>Description</label>
-                            <textarea value={this.state.description} onChange={this.handleDescription}/>
+                            <textarea value={this.state.description} onChange={this.handleDescription.bind(this)}/>
                         </div>
                     </div>
 
@@ -121,7 +122,7 @@ const MovieForm = React.createClass({
                         <div className="movie-form-cover">
                             <img src={this.state.coverUrl}/>
                             <input type="text" value={this.state.coverUrl} placeholder="http://cover.movie.org"
-                                   onChange={this.handleCoverUrl}/>
+                                   onChange={this.handleCoverUrl.bind(this)}/>
                         </div>
                         <div className="movie-form-genres-group">
                             <label>Genres</label>
@@ -129,7 +130,7 @@ const MovieForm = React.createClass({
                         </div>
                         <div className="movie-form-input">
                             <label>Format</label>
-                            <select value={this.state.format} onChange={this.handleFormat}>
+                            <select value={this.state.format} onChange={this.handleFormat.bind(this)}>
                                 <option name="undefined" value="undefined">choose ...</option>
                                 {formatOptions}
                             </select>
@@ -138,26 +139,23 @@ const MovieForm = React.createClass({
                 </div>
 
                 <div className="movie-form-buttons">
-                    <div className="button" onClick={this.search}>
+                    <div className="button" onClick={this.search.bind(this)}>
                         Search
                     </div>
 
-                    <div className="button" onClick={this.onSubmit}>
+                    <div className="button" onClick={this.onSubmit.bind(this)}>
                         Save
                     </div>
                 </div>
 
                 <div className="movie-form-suggestions">
-                    <MovieTable movies={this.state.suggestions} onMovieClickListener={this.onSuggestionClicked}/>
+                    <MovieTable movies={this.state.suggestions} onMovieClickListener={this.onSuggestionClicked.bind(this)}/>
                 </div>
             </div>
         );
-    },
+    }
 
-    onSuggestionClicked: function (movie) {
-        console.log("Clicked suggestion:");
-        console.log(movie);
-
+    onSuggestionClicked(movie) {
         const self = this;
 
         new MovieSearchResource(this.props.applicationState.accessToken).get(
@@ -166,9 +164,9 @@ const MovieForm = React.createClass({
                 self.applySuggestion(movieDetails);
             }
         );
-    },
+    }
 
-    applySuggestion: function (movie) {
+    applySuggestion(movie) {
         const genresOptions = this.state.genresOptions;
         const genres = this.state.genres;
         movie.genres.forEach(function (genre) {
@@ -184,16 +182,16 @@ const MovieForm = React.createClass({
 
         this.setState({
             title: movie.title,
-            publishDate: this.convertPublishDate(movie.published),
+            publishDate: MovieForm.convertPublishDate(movie.published),
             length: movie.length,
             genres: genres,
             genresOptions: genresOptions,
             coverUrl: movie.coverUrl,
             description: movie.description
         });
-    },
+    }
 
-    convertPublishDate: function (publishDate) {
+    static convertPublishDate(publishDate) {
         if (publishDate === undefined || publishDate === null || typeof publishDate !== "object" || publishDate.length < 3) {
             return "";
         }
@@ -202,39 +200,39 @@ const MovieForm = React.createClass({
         const day = publishDate[2] < 10 ? "0" + publishDate[2] : publishDate[2];
 
         return publishDate[0] + "-" + month + "-" + day;
-    },
+    }
 
-    handleTitle: function (evt) {
+    handleTitle(evt) {
         this.setState({
             title: evt.target.value
         });
-    },
+    }
 
-    handleLength: function (evt) {
+    handleLength(evt) {
         this.setState({
             length: evt.target.value
         });
-    },
+    }
 
-    handlePublishDate: function (evt) {
+    handlePublishDate(evt) {
         this.setState({
             publishDate: evt.target.value
         });
-    },
+    }
 
-    handleDescription: function (evt) {
+    handleDescription(evt) {
         this.setState({
             description: evt.target.value
         });
-    },
+    }
 
-    handleFormat: function (evt) {
+    handleFormat(evt) {
         this.setState({
             format: evt.target.value
         });
-    },
+    }
 
-    handleGenres: function (evt) {
+    handleGenres(evt) {
         const genres = this.state.genres;
 
         if (evt.target.value == "off") {
@@ -247,15 +245,15 @@ const MovieForm = React.createClass({
         this.setState({
             genres: genres
         });
-    },
+    }
 
-    handleCoverUrl: function (evt) {
+    handleCoverUrl(evt) {
         this.setState({
             coverUrl: evt.target.value
         });
-    },
+    }
 
-    onSubmit: function () {
+    onSubmit() {
         const genres = [];
         Object.entries(this.state.genres).forEach(function ([genre, state]) {
             if (state.value == "on") {
@@ -279,9 +277,9 @@ const MovieForm = React.createClass({
                 alertify.success("Movie added!");
             }
         );
-    },
+    }
 
-    search: function () {
+    search() {
         const self = this;
         const movieSuggestions = [];
 
@@ -305,6 +303,6 @@ const MovieForm = React.createClass({
             }
         );
     }
-});
+}
 
 export default MovieForm;

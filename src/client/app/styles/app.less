@@ -336,7 +336,9 @@ div.movie-table {
 
 div.movie {
   width: 90%;
-  padding: 10px;
+  height: 40px;
+
+  padding: 8px;
   margin: 10px auto;
 
   background-color: #ffffff;
@@ -344,8 +346,20 @@ div.movie {
 
   display: flex;
   flex-direction: row;
-  align-content: stretch;
-  justify-content: space-around;
+}
+
+div.movie-content {
+  height: 100%;
+
+  overflow: hidden;
+
+  align-items: center;
+
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
 }
 
 div.movie-title {
@@ -366,4 +380,35 @@ div.movie-publishdate {
 
 div.movie-genres {
   width: 30%;
+}
+
+div.movie-action-bar {
+  height: 24px;
+
+  position: relative;
+  top: 0;
+  right: 0;
+
+  justify-content: flex-end;
+}
+
+div.movie-action {
+  width: 24px;
+  height: 24px;
+}
+
+div.movie-action-clicked {
+  border-radius: 12px;
+  background: lightgray;
+}
+
+div.movie-action > img {
+  width: 100%;
+  height: 100%;
+
+  opacity: 0.6;
+}
+
+div.movie-action > img:hover {
+  opacity: 1.0;
 }

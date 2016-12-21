@@ -108,6 +108,34 @@ MoviesResource.prototype.post = function (movie, successCallback, errorCallback)
         });
 };
 
+MoviesResource.prototype.delete = function (movie, successCallback, errorCallback) {
+    console.log("DELETE /movies/" + movie.id);
+
+    const headers = new Headers({
+        "Accept": "application/json",
+        "X-Authorization": this.accessToken
+    });
+
+    const params = {
+        headers: headers,
+        method: "DELETE"
+    };
+
+    fetch("http://localhost:9000/movies/" + movie.id, params)
+        .then(function (response) {
+            if (response.status >= 400 && errorCallback !== undefined) {
+                errorCallback(response.status);
+            }
+            else if (successCallback !== undefined) {
+                successCallback();
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            window.location = "/login.html";
+        });
+};
+
 /**
  * RESTful resource to manage genres.
  *
