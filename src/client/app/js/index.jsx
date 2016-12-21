@@ -4,12 +4,10 @@ require("../styles/app.less");
 
 import React from "react";
 import {render} from "react-dom";
-
 import alertify from "alertify.js";
-
 import Header from "./header.jsx";
 import Menu from "./menu.jsx";
-import {MovieTable} from "./movie.jsx";
+import {MovieTable, MovieFilter} from "./movie.jsx";
 import {MoviesResource} from "./http.jsx";
 
 class App extends React.Component {
@@ -19,7 +17,11 @@ class App extends React.Component {
         this.state = {
             user: undefined,
             movies: [],
-            filter: undefined,
+            filter: {
+                title: undefined,
+                genres: undefined,
+                formats: undefined
+            },
             filteredMovies: [],
             applicationState: {
                 accessToken: undefined
@@ -66,6 +68,8 @@ class App extends React.Component {
                 <Menu applicationState={this.state.applicationState}/>
                 <MovieTable applicationState={this.state.applicationState} movies={this.state.filteredMovies}
                             onMovieDeleteListener={this.deleteMovie.bind(this)}/>
+                <MovieFilter applicationState={this.state.applicationState}
+                             onFilterChange={this.onFilterChanged.bind(this)}/>
             </div>
         );
     }
@@ -107,29 +111,75 @@ class App extends React.Component {
     }
 
     searchChanged(searchValue) {
+        const filter = this.state.filter;
+        filter.title = searchValue;
+
         this.setState({
-            filter: searchValue
-        }, function () {
-            this.filter();
-        })
+            filter: filter
+        }, this.filter);
+    }
+
+    onFilterChanged(filter) {
+        const f = this.state.filter;
+        f.genres = filter.genres.enabled;
+        f.formats = filter.formats.enabled;
+
+        this.setState({
+            filter: f
+        }, this.filter);
     }
 
     filter() {
-        if (this.state.filter === undefined || this.state.filter == "") {
-            this.setState({
-                filteredMovies: this.state.movies
+        let filteredMovies = this.state.movies;
+
+        if (this.state.filter.title !== undefined && this.state.filter.title !== "") {
+            const titleFilter = this.state.filter.title.toLowerCase();
+            filteredMovies = filteredMovies.filter((movie) => {
+                return movie.title.toLowerCase().indexOf(titleFilter) >= 0;
             });
-            return;
         }
 
-        const filter = this.state.filter.toLowerCase();
-        const newFilteredMovies = this.state.movies.filter(function (movie) {
-            return movie.title.toLowerCase().indexOf(filter) >= 0;
-        });
+        if (this.state.filter.genres !== undefined) {
+            filteredMovies = filteredMovies.filter((movie) => {
+                return App.movieMatchesGenresFilter(movie, this.state.filter.genres);
+            });
+        }
+
+        if (this.state.filter.formats !== undefined) {
+            filteredMovies = filteredMovies.filter((movie) => {
+                return App.movieMatchesFormatsFilter(movie, this.state.filter.formats);
+            });
+        }
 
         this.setState({
-            filteredMovies: newFilteredMovies
+            filteredMovies: filteredMovies
         });
+    }
+
+    static movieMatchesGenresFilter(movie, genres) {
+        let matches = false;
+
+        genres.forEach((genre) => {
+            movie.genres.forEach((mg) => {
+                if (mg.name === genre) {
+                    matches = true
+                }
+            });
+        });
+
+        return matches;
+    }
+
+    static movieMatchesFormatsFilter(movie, formats) {
+        let matches = false;
+
+        formats.forEach((format) => {
+            if (movie.format === format) {
+                matches = true;
+            }
+        });
+
+        return matches;
     }
 }
 

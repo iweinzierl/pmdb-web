@@ -1,6 +1,8 @@
 "use strict";
 
 import React from "react";
+import alertify from "alertify.js";
+import {FormatsResource, GenresResource} from "./http.jsx";
 
 /**
  * React Component to render a list of Movies.
@@ -59,7 +61,8 @@ class MovieRow extends React.Component {
             .join(" ");
 
         return (
-            <div style={this.state.style} className="movie" onClick={this.onClick.bind(this)} onMouseOver={this.onMouseOver.bind(this)}
+            <div style={this.state.style} className="movie" onClick={this.onClick.bind(this)}
+                 onMouseOver={this.onMouseOver.bind(this)}
                  onMouseLeave={this.onMouseOut.bind(this)}>
                 <div className="movie-content">
                     <div className="movie-cell movie-cover">
@@ -170,8 +173,273 @@ MovieAction.propTypes = {
     onClickListener: React.PropTypes.func.isRequired
 };
 
+/**
+ * React Component to manage movie filters.
+ * Filter event looks like this:
+ * {
+ *   genres: {
+ *     enabled: { ... },
+ *     disabled: { ... }
+ *   },
+ *   formats: {
+ *     enabled: { ... },
+ *     disabled: { ... }
+ *   }
+ * }
+ */
+class MovieFilter extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            genres: undefined,
+            formats: undefined
+        }
+    }
+
+    render() {
+        return (
+            <div className="filter-group">
+                <div className="filter-block">
+                    <GenreFilter applicationState={this.props.applicationState}
+                                 onFilterChange={this.genreFilterChanged.bind(this)}/>
+                </div>
+                <div className="filter-block">
+                    <FormatFilter applicationState={this.props.applicationState}
+                                  onFilterChange={this.formatFilterChanged.bind(this)}/>
+                </div>
+            </div>
+        );
+    }
+
+    genreFilterChanged(filter) {
+        this.setState({
+            genres: filter
+        }, this.notify);
+    }
+
+    formatFilterChanged(filter) {
+        this.setState({
+            formats: filter
+        }, this.notify);
+    }
+
+    notify() {
+        if (this.state.genres === undefined || this.state.formats === undefined) {
+            return;
+        }
+
+        this.props.onFilterChange({
+            genres: this.state.genres,
+            formats: this.state.formats
+        });
+    }
+}
+
+MovieFilter.propTypes = {
+    onFilterChange: React.PropTypes.func.isRequired
+};
+
+/**
+ * React Component to manage genre filters for movies.
+ */
+class GenreFilter extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            genres: {}
+        };
+    }
+
+    componentWillMount() {
+        const self = this;
+        new GenresResource(this.props.applicationState.accessToken).get(
+            (genres) => {
+                const gs = {};
+                genres.forEach((genre) => {
+                    gs[genre] = {
+                        label: genre,
+                        value: genre,
+                        checked: true,
+                        enabled: "on"
+                    };
+                });
+
+                self.setState({
+                    genres: gs
+                }, this.notify);
+            },
+            (code, errorText, errorJson) => {
+                alertify.error("Operation failed -> http code " + code);
+                console.error(errorText !== null ? errorText : errorJson);
+            }
+        );
+    }
+
+    render() {
+        const self = this;
+        const genresList = [];
+        Object.entries(this.state.genres).forEach(function ([genre, state]) {
+            genresList.push(
+                <li key={state.value}>
+                    <input type="checkbox" name={state.value} key={state.value}
+                           checked={self.state.genres[genre].checked}
+                           value={self.state.genres[genre].enabled}
+                           onChange={self.onGenresChange.bind(self)}/>
+                    {state.label}
+                </li>
+            );
+        });
+
+        return (
+            <ul key="genre">
+                {genresList}
+            </ul>
+        );
+    }
+
+    onGenresChange(evt) {
+        const gs = this.state.genres;
+        gs[evt.target.name].enabled = evt.target.value === "on" ? "off" : "on";
+        gs[evt.target.name].checked = !gs[evt.target.name].checked;
+
+        this.setState({
+            genres: gs
+        }, this.notify);
+    }
+
+    notify() {
+        const enabled = [];
+        const disabled = [];
+
+        Object.entries(this.state.genres).forEach(([genre, state]) => {
+            if (state.checked) {
+                enabled.push(genre);
+            }
+            else {
+                disabled.push(genre);
+            }
+        });
+
+        this.props.onFilterChange({
+            enabled: enabled,
+            disabled: disabled
+        });
+    }
+}
+
+GenreFilter.propTypes = {
+    onFilterChange: React.PropTypes.func.isRequired
+};
+
+/**
+ * React Component to manage format filters for movies.
+ */
+class FormatFilter extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            formatLabels: {
+                "DVD": "DVD",
+                "BLURAY": "BLU-RAY",
+                "VHS": "VHS",
+                "AMAZON_VIDEO": "Amazon Video",
+                "GOOGLE_MOVIES": "Google Movies"
+            },
+            formats: {
+                "VHS": {label: "VHS", value: "VHS", checked: true, enabled: "on"},
+                "DVD": {label: "DVD", value: "DVD", checked: true, enabled: "on"},
+                "BLURAY": {label: "BLU-RAY", value: "BLURAY", checked: true, enabled: "on"}
+            }
+        };
+    }
+
+    componentWillMount() {
+        const self = this;
+        new FormatsResource(this.props.applicationState.accessToken).get(
+            (formats) => {
+                const fs = {};
+                formats.forEach((format) => {
+                    fs[format] = {
+                        label: this.state.formatLabels[format],
+                        value: format,
+                        checked: true,
+                        enabled: "on"
+                    };
+                });
+
+                self.setState({
+                    formats: fs
+                }, this.notify);
+            },
+            (code, errorText, errorJson) => {
+                alertify.error("Operation failed -> http code " + code);
+                console.error(errorText !== null ? errorText : errorJson);
+            }
+        );
+    }
+
+    render() {
+        const self = this;
+        const formatList = [];
+        Object.entries(this.state.formats).forEach(function ([format, state]) {
+            formatList.push(
+                <li key={state.value}>
+                    <input type="checkbox" name={state.value} key={state.value}
+                           checked={self.state.formats[format].checked}
+                           value={self.state.formats[format].enabled}
+                           onChange={self.onFormatChange.bind(self)}/>
+                    {state.label}
+                </li>
+            );
+        });
+
+        return (
+            <ul key="format">
+                {formatList}
+            </ul>
+        );
+    }
+
+    onFormatChange(evt) {
+        const fs = this.state.formats;
+        fs[evt.target.name].enabled = evt.target.value === "on" ? "off" : "on";
+        fs[evt.target.name].checked = !fs[evt.target.name].checked;
+
+        this.setState({
+            formats: fs
+        }, this.notify);
+    }
+
+    notify() {
+        const enabled = [];
+        const disabled = [];
+
+        Object.entries(this.state.formats).forEach(([format, state]) => {
+            if (state.checked) {
+                enabled.push(format);
+            }
+            else {
+                disabled.push(format);
+            }
+        });
+
+        this.props.onFilterChange({
+            enabled: enabled,
+            disabled: disabled
+        });
+    }
+}
+
+FormatFilter.propTypes = {
+    onFilterChange: React.PropTypes.func.isRequired
+};
+
 module.exports = {
     MovieTable: MovieTable,
     MovieRow: MovieRow,
-    MovieAction: MovieAction
+    MovieAction: MovieAction,
+    MovieFilter: MovieFilter
 };

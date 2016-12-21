@@ -198,6 +198,43 @@ GenresResource.prototype.get = function (successCallback, errorCallback) {
 };
 
 /**
+ * RESTful resource to manage formats.
+ *
+ * @param accessToken
+ * @constructor
+ */
+function FormatsResource(accessToken) {
+    this.accessToken = accessToken;
+}
+
+FormatsResource.prototype.get = function (successCallback, errorCallback) {
+    console.log("GET /formats");
+
+    const headers = new Headers({
+        "Accept": "application/json",
+        "X-Authorization": this.accessToken
+    });
+
+    fetch(config.pmdb.paths.formats, {headers: headers})
+        .then(function (response) {
+            if (response.status >= 400) {
+                if (errorCallback !== undefined) {
+                    processError(response, errorCallback);
+                }
+            }
+            else if (successCallback !== undefined) {
+                response.json().then(function (data) {
+                    successCallback(data);
+                });
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            window.location = config.pmdb.paths.login;
+        });
+};
+
+/**
  * RESTful resource to search for movies.
  *
  * @type {{UsersResource: UsersResource, MoviesResource: MoviesResource, GenresResource: GenresResource}}
@@ -282,5 +319,6 @@ module.exports = {
     UsersResource: UsersResource,
     MoviesResource: MoviesResource,
     GenresResource: GenresResource,
+    FormatsResource: FormatsResource,
     MovieSearchResource: MovieSearchResource
 };

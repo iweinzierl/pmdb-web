@@ -5,7 +5,8 @@
       "index": "http://localhost:8000",
       "user": "http://localhost:9000/user",
       "movies": "http://localhost:9000/movies",
-      "genres": "http://localhost:9000/genres"
+      "genres": "http://localhost:9000/genres",
+      "formats": "http://localhost:9000/formats"
     }
   },
   "moviesearch": {
