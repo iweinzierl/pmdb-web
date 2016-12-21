@@ -1,0 +1,16 @@
+{
+  "pmdb": {
+    "paths": {
+      "login": "http://localhost:8000/login.html",
+      "user": "http://localhost:9000/user",
+      "movies": "http://localhost:9000/movies",
+      "genres": "http://localhost:9000/genres"
+    }
+  },
+  "moviesearch": {
+    "paths": {
+      "search": "http://iweinzierl.de:9001/api/movie",
+      "details": "http://iweinzierl.de:9001/api/movie"
+    }
+  }
+}

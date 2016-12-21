@@ -1,9 +1,27 @@
 "use strict";
 
+const config = require("../../../../config.json");
+
 function queryParams(params) {
     return Object.keys(params)
         .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
         .join('&');
+}
+
+function processError(response, errorCallback) {
+    if (errorCallback !== undefined) {
+        const contentType = response.headers.get("content-type");
+
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            response.json().then(function (errorJson) {
+                errorCallback(response.status, null, errorJson);
+            });
+        } else {
+            response.text().then(function (errorText) {
+                errorCallback(response.status, errorText, null);
+            });
+        }
+    }
 }
 
 /**
@@ -24,10 +42,12 @@ UsersResource.prototype.get = function (successCallback, errorCallback) {
         "X-Authorization": this.accessToken
     });
 
-    fetch("http://localhost:9000/user", {headers: headers})
+    fetch(config.pmdb.paths.user, {headers: headers})
         .then(function (response) {
-            if (response.status >= 400 && errorCallback !== undefined) {
-                errorCallback(response.status);
+            if (response.status >= 400) {
+                if (errorCallback !== undefined) {
+                    processError(response, errorCallback);
+                }
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
@@ -37,7 +57,7 @@ UsersResource.prototype.get = function (successCallback, errorCallback) {
         })
         .catch(function (error) {
             console.log(error);
-            window.location = "/login.html";
+            window.location = config.pmdb.paths.login;
         });
 };
 
@@ -59,10 +79,12 @@ MoviesResource.prototype.get = function (successCallback, errorCallback) {
         "X-Authorization": this.accessToken
     });
 
-    fetch("http://localhost:9000/movies", {headers: headers})
+    fetch(config.pmdb.paths.movies, {headers: headers})
         .then(function (response) {
-            if (response.status >= 400 && errorCallback !== undefined) {
-                errorCallback(response.status);
+            if (response.status >= 400) {
+                if (errorCallback !== undefined) {
+                    processError(response, errorCallback);
+                }
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
@@ -72,7 +94,7 @@ MoviesResource.prototype.get = function (successCallback, errorCallback) {
         })
         .catch(function (error) {
             console.log(error);
-            window.location = "/login.html";
+            window.location = config.pmdb.paths.login;
         });
 };
 
@@ -91,10 +113,10 @@ MoviesResource.prototype.post = function (movie, successCallback, errorCallback)
         body: JSON.stringify(movie)
     };
 
-    fetch("http://localhost:9000/movies", params)
+    fetch(config.pmdb.paths.movies, params)
         .then(function (response) {
-            if (response.status >= 400 && errorCallback !== undefined) {
-                errorCallback(response.status);
+            if (response.status >= 400) {
+                processError(response, errorCallback);
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
@@ -104,7 +126,7 @@ MoviesResource.prototype.post = function (movie, successCallback, errorCallback)
         })
         .catch(function (error) {
             console.log(error);
-            window.location = "/login.html";
+            window.location = config.pmdb.paths.login;
         });
 };
 
@@ -121,10 +143,12 @@ MoviesResource.prototype.delete = function (movie, successCallback, errorCallbac
         method: "DELETE"
     };
 
-    fetch("http://localhost:9000/movies/" + movie.id, params)
+    fetch(config.pmdb.paths.movies + "/" + movie.id, params)
         .then(function (response) {
-            if (response.status >= 400 && errorCallback !== undefined) {
-                errorCallback(response.status);
+            if (response.status >= 400) {
+                if (errorCallback !== undefined) {
+                    processError(response, errorCallback);
+                }
             }
             else if (successCallback !== undefined) {
                 successCallback();
@@ -132,7 +156,7 @@ MoviesResource.prototype.delete = function (movie, successCallback, errorCallbac
         })
         .catch(function (error) {
             console.log(error);
-            window.location = "/login.html";
+            window.location = config.pmdb.paths.login;
         });
 };
 
@@ -154,10 +178,12 @@ GenresResource.prototype.get = function (successCallback, errorCallback) {
         "X-Authorization": this.accessToken
     });
 
-    fetch("http://localhost:9000/genres", {headers: headers})
+    fetch(config.pmdb.paths.genres, {headers: headers})
         .then(function (response) {
-            if (response.status >= 400 && errorCallback !== undefined) {
-                errorCallback(response.status);
+            if (response.status >= 400) {
+                if (errorCallback !== undefined) {
+                    processError(response, errorCallback);
+                }
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
@@ -167,7 +193,7 @@ GenresResource.prototype.get = function (successCallback, errorCallback) {
         })
         .catch(function (error) {
             console.log(error);
-            window.location = "/login.html";
+            window.location = config.pmdb.paths.login;
         });
 };
 
@@ -192,10 +218,12 @@ MovieSearchResource.prototype.search = function (title, successCallback, errorCa
         headers: headers
     };
 
-    fetch("http://iweinzierl.de:9001/api/movie?" + queryParams({title: title}), params)
+    fetch(config.moviesearch.paths.search + "?" + queryParams({title: title}), params)
         .then(function (response) {
-            if (response.status >= 400 && errorCallback !== undefined) {
-                errorCallback(response.status);
+            if (response.status >= 400) {
+                if (errorCallback !== undefined) {
+                    processError(response, errorCallback);
+                }
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
@@ -205,7 +233,9 @@ MovieSearchResource.prototype.search = function (title, successCallback, errorCa
                             title: result.title,
                             length: result.length,
                             coverUrl: result.coverUrl,
-                            genres: result.genres.map((genre) => { return {id: null, name: genre}; })
+                            genres: result.genres.map((genre) => {
+                                return {id: null, name: genre};
+                            })
                         }
                     }));
                 });
@@ -213,7 +243,7 @@ MovieSearchResource.prototype.search = function (title, successCallback, errorCa
         })
         .catch(function (error) {
             console.log(error);
-            window.location = "/login.html";
+            window.location = config.pmdb.paths.login;
         });
 };
 
@@ -229,10 +259,12 @@ MovieSearchResource.prototype.get = function (id, successCallback, errorCallback
         headers: headers
     };
 
-    fetch("http://iweinzierl.de:9001/api/movie/" + id, params)
+    fetch(config.moviesearch.paths.details + "/" + id, params)
         .then(function (response) {
-            if (response.status >= 400 && errorCallback !== undefined) {
-                errorCallback(response.status);
+            if (response.status >= 400) {
+                if (errorCallback !== undefined) {
+                    processError(response, errorCallback);
+                }
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
@@ -242,7 +274,7 @@ MovieSearchResource.prototype.get = function (id, successCallback, errorCallback
         })
         .catch(function (error) {
             console.log(error);
-            window.location = "/login.html";
+            window.location = config.pmdb.paths.login;
         });
 };
 

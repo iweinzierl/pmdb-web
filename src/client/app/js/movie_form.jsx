@@ -4,6 +4,7 @@ require("../styles/app.less");
 
 import React from "react";
 import alertify from "alertify.js";
+import pretty from "js-object-pretty-print";
 
 import {MovieTable} from "./movie.jsx";
 import {MoviesResource} from "./http.jsx";
@@ -14,6 +15,10 @@ class MovieForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            modal: {
+                content: "",
+                open: false
+            },
             genresOptions: [
                 "Action",
                 "Comedy",
@@ -97,7 +102,8 @@ class MovieForm extends React.Component {
                         <div className="movie-form-input">
                             <label>Title</label>
                             <input type="text" value={this.state.title} placeholder="Title"
-                                   onChange={this.handleTitle.bind(this)} onKeyPress={this.handleTitleEnter.bind(this)}/>
+                                   onChange={this.handleTitle.bind(this)}
+                                   onKeyPress={this.handleTitleEnter.bind(this)}/>
                         </div>
 
                         <div className="movie-form-input">
@@ -109,7 +115,8 @@ class MovieForm extends React.Component {
                         <div className="movie-form-input">
                             <label>Release Date</label>
                             <input type="text" value={this.state.publishDate}
-                                   placeholder="Published at (yyyy-MM-dd)" onChange={this.handlePublishDate.bind(this)}/>
+                                   placeholder="Published at (yyyy-MM-dd)"
+                                   onChange={this.handlePublishDate.bind(this)}/>
                         </div>
 
                         <div className="movie-form-input">
@@ -149,7 +156,8 @@ class MovieForm extends React.Component {
                 </div>
 
                 <div className="movie-form-suggestions">
-                    <MovieTable movies={this.state.suggestions} onMovieClickListener={this.onSuggestionClicked.bind(this)}/>
+                    <MovieTable movies={this.state.suggestions}
+                                onMovieClickListener={this.onSuggestionClicked.bind(this)}/>
                 </div>
             </div>
         );
@@ -260,6 +268,7 @@ class MovieForm extends React.Component {
     }
 
     onSubmit() {
+        const self = this;
         const genres = [];
         Object.entries(this.state.genres).forEach(function ([genre, state]) {
             if (state.value == "on") {
@@ -279,8 +288,12 @@ class MovieForm extends React.Component {
 
         new MoviesResource(this.props.applicationState.accessToken).post(
             movie,
-            function (data) {
+            (data) => {
                 alertify.success("Movie added!");
+            },
+            (code, errorText, errorJson) => {
+                const details = errorJson === null ? errorText : pretty.pretty(errorJson, 4, "HTML");
+                alertify.alert("Operation failed -> http code " + code + "br/>" + details);
             }
         );
     }
