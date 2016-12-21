@@ -8,6 +8,7 @@ import {render} from "react-dom";
 const LoginButton = React.createClass({
 
     getInitialState: function () {
+        console.log("Redirect uri = " + config.pmdb.paths.index);
         return {
             baseUrl: "https://accounts.google.com/o/oauth2/v2/auth",
             redirectUri: config.pmdb.paths.index,
