@@ -26,6 +26,15 @@ body {
   font-size: 81.25%;
 }
 
+div.label {
+  background: rgba(0, 0, 0, .03);
+
+  box-shadow: @box-shadow;
+  border-radius: 2px;
+
+  padding: 6px;
+}
+
 div.button {
   width: 100px;
   height: 35px;
@@ -354,8 +363,8 @@ div.movie {
 }
 
 div.movie-cell {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 div.movie-cell:first-child {
@@ -435,6 +444,13 @@ div.movie-publishdate {
 
 div.movie-genres {
   color: @text-secondary-color;
+
+  display: flex;
+  flex-direction: row;
+}
+
+div.movie-genres > * {
+  margin-right: 10px;
 }
 
 div.movie-action-bar {

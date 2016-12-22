@@ -2,7 +2,9 @@
 
 import React from "react";
 import alertify from "alertify.js";
+
 import {FormatsResource, GenresResource} from "./http.jsx";
+import {Label} from "./widgets.jsx";
 
 /**
  * React Component to render a list of Movies.
@@ -56,9 +58,10 @@ class MovieRow extends React.Component {
     render() {
         const genres = this.props.movie.genres
             .map(function (genre) {
-                return genre.name;
-            })
-            .join(" ");
+                return (
+                    <Label key={genre.name} message={genre.name}/>
+                );
+            });
 
         return (
             <div style={this.state.style} className="movie" onClick={this.onClick.bind(this)}
