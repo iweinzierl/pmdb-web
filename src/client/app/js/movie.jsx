@@ -64,15 +64,20 @@ class MovieRow extends React.Component {
             <div style={this.state.style} className="movie" onClick={this.onClick.bind(this)}
                  onMouseOver={this.onMouseOver.bind(this)}
                  onMouseLeave={this.onMouseOut.bind(this)}>
+                <div className="movie-cell movie-cover">
+                    <img src={this.props.movie.coverUrl}/>
+                </div>
                 <div className="movie-content">
-                    <div className="movie-cell movie-cover">
-                        <img src={this.props.movie.coverUrl}/>
+                    <div className="movie-title-desc-wrapper">
+                        <div className="movie-cell movie-title">{this.props.movie.title}</div>
+                        <div className="movie-cell movie-description">{this.props.movie.description}</div>
                     </div>
-                    <div className="movie-cell movie-title">{this.props.movie.title}</div>
-                    <div className="movie-cell movie-format">{this.props.movie.format}</div>
-                    <div className="movie-cell movie-length">{this.props.movie.length} min</div>
-                    <div className="movie-cell movie-publishdate">{this.props.movie.publishDate}</div>
-                    <div className="movie-cell movie-genres">{genres}</div>
+                    <div className="movie-meta-info-wrapper">
+                        <div className="movie-cell movie-format">{this.props.movie.format}</div>
+                        <div className="movie-cell movie-length">{this.props.movie.length} min</div>
+                        <div className="movie-cell movie-publishdate">{this.props.movie.publishDate}</div>
+                        <div className="movie-cell movie-genres">{genres}</div>
+                    </div>
                 </div>
                 <MovieActionBar applicationState={this.props.applicationState} movie={this.props.movie}
                                 display={this.state.displayActions}
