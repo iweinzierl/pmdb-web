@@ -270,6 +270,8 @@ MovieSearchResource.prototype.search = function (title, successCallback, errorCa
                             title: result.title,
                             length: result.length,
                             coverUrl: result.coverUrl,
+                            description: result.description,
+                            publishDate: result.published !== null ? result.published[0] + "-" + result.published[1] + "-" + result.published[2] : "",
                             genres: result.genres.map((genre) => {
                                 return {id: null, name: genre};
                             })
