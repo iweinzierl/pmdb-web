@@ -62,14 +62,16 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="content">
+            <div className="body">
                 <Header applicationState={this.state.applicationState} user={this.state.user}
                         searchListener={this.searchChanged.bind(this)}/>
-                <Menu applicationState={this.state.applicationState}/>
-                <MovieTable applicationState={this.state.applicationState} movies={this.state.filteredMovies}
-                            onMovieDeleteListener={this.deleteMovie.bind(this)}/>
-                <MovieFilter applicationState={this.state.applicationState}
-                             onFilterChange={this.onFilterChanged.bind(this)}/>
+                <div className="content">
+                    <Menu applicationState={this.state.applicationState}/>
+                    <MovieTable applicationState={this.state.applicationState} movies={this.state.filteredMovies}
+                                onMovieDeleteListener={this.deleteMovie.bind(this)}/>
+                    <MovieFilter applicationState={this.state.applicationState}
+                                 onFilterChange={this.onFilterChanged.bind(this)}/>
+                </div>
             </div>
         );
     }
@@ -135,7 +137,7 @@ class App extends React.Component {
         if (this.state.filter.title !== undefined && this.state.filter.title !== "") {
             const titleFilter = this.state.filter.title.toLowerCase();
             filteredMovies = filteredMovies.filter((movie) => {
-                return movie.title.toLowerCase().indexOf(titleFilter) >= 0;
+                return movie.title.toLowerCase().indexOf(titleFilter);
             });
         }
 

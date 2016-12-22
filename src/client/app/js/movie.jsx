@@ -51,6 +51,9 @@ class MovieRow extends React.Component {
             displayActions: "none",
             style: {
                 cursor: props.onMovieClickListener === undefined ? "default" : "pointer"
+            },
+            styleDetails: {
+                display: "none"
             }
         };
     }
@@ -67,24 +70,31 @@ class MovieRow extends React.Component {
             <div style={this.state.style} className="movie" onClick={this.onClick.bind(this)}
                  onMouseOver={this.onMouseOver.bind(this)}
                  onMouseLeave={this.onMouseOut.bind(this)}>
-                <div className="movie-cell movie-cover">
-                    <img src={this.props.movie.coverUrl}/>
-                </div>
-                <div className="movie-content">
-                    <div className="movie-title-desc-wrapper">
-                        <div className="movie-cell movie-title">{this.props.movie.title}</div>
-                        <div className="movie-cell movie-description">{this.props.movie.description}</div>
+                <div className="movie-preview">
+                    <div className="movie-cell movie-cover">
+                        <img src={this.props.movie.coverUrl}/>
                     </div>
-                    <div className="movie-meta-info-wrapper">
-                        <div className="movie-cell movie-format">{this.props.movie.format}</div>
-                        <div className="movie-cell movie-length">{this.props.movie.length} min</div>
-                        <div className="movie-cell movie-publishdate">{this.props.movie.publishDate}</div>
-                        <div className="movie-cell movie-genres">{genres}</div>
+                    <div className="movie-content">
+                        <div className="movie-title-desc-wrapper">
+                            <div className="movie-cell movie-title">{this.props.movie.title}</div>
+                            <div className="movie-cell movie-description">{this.props.movie.description}</div>
+                        </div>
+                        <div className="movie-meta-info-wrapper">
+                            <div className="movie-cell movie-format">{this.props.movie.format}</div>
+                            <div className="movie-cell movie-length">{this.props.movie.length} min</div>
+                            <div className="movie-cell movie-publishdate">{this.props.movie.publishDate}</div>
+                            <div className="movie-cell movie-genres">{genres}</div>
+                        </div>
                     </div>
+                    <MovieActionBar applicationState={this.props.applicationState} movie={this.props.movie}
+                                    display={this.state.displayActions}
+                                    onMovieDeleteListener={this.props.onMovieDeleteListener}/>
                 </div>
-                <MovieActionBar applicationState={this.props.applicationState} movie={this.props.movie}
-                                display={this.state.displayActions}
-                                onMovieDeleteListener={this.props.onMovieDeleteListener}/>
+                <div className="movie-detail" style={this.state.styleDetails}>
+                    <span>
+                        {this.props.movie.description}
+                    </span>
+                </div>
             </div>
         );
     }
@@ -93,6 +103,13 @@ class MovieRow extends React.Component {
         if (this.props.onMovieClickListener !== undefined && this.props.onMovieClickListener !== null) {
             this.props.onMovieClickListener(this.props.movie);
         }
+
+        const sd = this.state.styleDetails;
+        sd.display = sd.display === "none" ? "flex" : "none";
+
+        this.setState({
+            styleDetails: sd
+        });
     }
 
     onMouseOver() {
