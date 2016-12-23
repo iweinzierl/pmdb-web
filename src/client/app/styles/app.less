@@ -503,6 +503,10 @@ div.movie-title {
 }
 
 div.movie-description {
+  @media @screen-mobile {
+    display: none;
+  }
+
   width: 0;
 
   flex-grow: 1;
@@ -514,14 +518,23 @@ div.movie-description {
 }
 
 div.movie-format {
+  @media @screen-mobile {
+    display: none;
+  }
   color: @text-secondary-color;
 }
 
 div.movie-length {
+  @media @screen-mobile {
+    display: none;
+  }
   color: @text-secondary-color;
 }
 
 div.movie-publishdate {
+  @media @screen-mobile {
+    display: none;
+  }
   color: @text-secondary-color;
 }
 
