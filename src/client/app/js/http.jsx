@@ -57,7 +57,9 @@ UsersResource.prototype.get = function (successCallback, errorCallback) {
         })
         .catch(function (error) {
             console.log(error);
-            window.location = config.pmdb.paths.login;
+            if (config.pmdb.redirectOnError) {
+                window.location = config.pmdb.paths.login;
+            }
         });
 };
 
@@ -94,7 +96,9 @@ MoviesResource.prototype.get = function (successCallback, errorCallback) {
         })
         .catch(function (error) {
             console.log(error);
-            window.location = config.pmdb.paths.login;
+            if (config.pmdb.redirectOnError) {
+                window.location = config.pmdb.paths.login;
+            }
         });
 };
 
@@ -126,7 +130,9 @@ MoviesResource.prototype.post = function (movie, successCallback, errorCallback)
         })
         .catch(function (error) {
             console.log(error);
-            window.location = config.pmdb.paths.login;
+            if (config.pmdb.redirectOnError) {
+                window.location = config.pmdb.paths.login;
+            }
         });
 };
 
@@ -156,7 +162,9 @@ MoviesResource.prototype.delete = function (movie, successCallback, errorCallbac
         })
         .catch(function (error) {
             console.log(error);
-            window.location = config.pmdb.paths.login;
+            if (config.pmdb.redirectOnError) {
+                window.location = config.pmdb.paths.login;
+            }
         });
 };
 
@@ -193,7 +201,9 @@ GenresResource.prototype.get = function (successCallback, errorCallback) {
         })
         .catch(function (error) {
             console.log(error);
-            window.location = config.pmdb.paths.login;
+            if (config.pmdb.redirectOnError) {
+                window.location = config.pmdb.paths.login;
+            }
         });
 };
 
@@ -230,7 +240,9 @@ FormatsResource.prototype.get = function (successCallback, errorCallback) {
         })
         .catch(function (error) {
             console.log(error);
-            window.location = config.pmdb.paths.login;
+            if (config.pmdb.redirectOnError) {
+                window.location = config.pmdb.paths.login;
+            }
         });
 };
 
@@ -282,7 +294,9 @@ MovieSearchResource.prototype.search = function (title, successCallback, errorCa
         })
         .catch(function (error) {
             console.log(error);
-            window.location = config.pmdb.paths.login;
+            if (config.pmdb.redirectOnError) {
+                window.location = config.pmdb.paths.login;
+            }
         });
 };
 
@@ -313,7 +327,9 @@ MovieSearchResource.prototype.get = function (id, successCallback, errorCallback
         })
         .catch(function (error) {
             console.log(error);
-            window.location = config.pmdb.paths.login;
+            if (config.pmdb.redirectOnError) {
+                window.location = config.pmdb.paths.login;
+            }
         });
 };
 

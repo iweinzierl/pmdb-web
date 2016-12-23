@@ -9,12 +9,13 @@ module.exports = {
             "movies": "http://" + address.address + ":9000/movies",
             "genres": "http://" + address.address + ":9000/genres",
             "formats": "http://" + address.address + ":9000/formats"
-        }
+        },
+        "redirectOnError": false
     },
     "moviesearch": {
         "paths": {
             "search": "http://iweinzierl.de:9001/api/movie",
             "details": "http://iweinzierl.de:9001/api/movie"
         }
-    }
+    },
 };
