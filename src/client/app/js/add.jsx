@@ -51,10 +51,13 @@ const App = React.createClass({
 
     render: function () {
         return (
-            <div className="content">
-                <Header applicationState={this.state.applicationState} user={this.state.user} searchListener={this.searchChanged}/>
-                <Menu applicationState={this.state.applicationState}/>
-                <MovieForm applicationState={this.state.applicationState}/>
+            <div className="body">
+                <Header applicationState={this.state.applicationState} user={this.state.user}
+                        searchListener={this.searchChanged}/>
+                <div className="content">
+                    <Menu applicationState={this.state.applicationState}/>
+                    <MovieForm applicationState={this.state.applicationState}/>
+                </div>
             </div>
         );
     }

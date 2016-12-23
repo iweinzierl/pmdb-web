@@ -17,6 +17,8 @@
 
 @header-content-height: 35px;
 
+@container-max-width: 350px;
+
 body {
   background-color: @primary-color;
   padding: 0;
@@ -203,6 +205,14 @@ div.menu-item > img {
   opacity: 0.5;
 }
 
+div.movie-collection {
+  padding-left: @horizontal-margin;
+  padding-right: @horizontal-margin;
+  padding-top: @vertical-margin;
+
+  flex-grow: 1;
+}
+
 div.menu-item > span {
   padding-left: 15px;
 
@@ -222,44 +232,17 @@ div.menu-item > span {
   width: 100%;
 
   margin-top: @vertical-margin;
-  margin-left: auto;
-  margin-right: auto;
 
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-.movie-form-left {
-  width: 45%;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.movie-form-right {
-  width: 45%;
-
+.movie-form-side {
   display: flex;
   flex-direction: column;
 
-  margin-left: @horizontal-margin;
-}
-
-.movie-form-buttons {
-  width: 100%;
-
-  display: flex;
-  flex-direction: row;
-}
-
-.movie-form-buttons > * {
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
-.movie-form-suggestions {
-  width: 100%;
+  padding-left: @horizontal-margin;
 }
 
 .movie-form-input {
@@ -278,21 +261,23 @@ div.movie-form-input > label {
 }
 
 div.movie-form-input > input {
-  width: 400px;
+  min-width: @container-max-width;
+
   font-size: initial;
 
   padding: 8px;
 }
 
 div.movie-form-input > textarea {
-  width: 400px;
+  min-width: @container-max-width;
+  min-height: 110px;
+
   font-size: initial;
 
   padding: 8px;
 }
 
 div.movie-form-input > select {
-  width: 400px;
   font-size: large;
 }
 
@@ -312,20 +297,11 @@ div.movie-form-cover > img {
   width: 150px;
   height: 150px;
 
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-div.movie-form-cover > input {
-  width: 400px;
-  font-size: initial;
-
-  padding: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 div.movie-form-genres-group {
-  height: 100px;
-
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -335,26 +311,49 @@ div.movie-form-genres-group {
   margin-bottom: 30px;
 }
 
-div.movie-form-genres-group > div {
+div.movie-form-genres > div {
   padding: 8px;
 }
 
-div.movie-form-genres-group > div > * {
+div.movie-form-genres-options {
+  max-width: @container-max-width;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+div.movie-form-genres-options > * {
   padding: 4px;
 }
 
-div.movie-form-genres-group > label {
-  width: 100%;
-
+div.movie-form-genres > label {
   margin-bottom: 5px;
   font-weight: bold;
 }
 
-div.movie-table {
-  padding-top: @vertical-margin;
-  padding-left: @horizontal-margin;
-  padding-right: @horizontal-margin;
+.movie-form-buttons {
+  width: 100%;
 
+  padding-left: @horizontal-margin;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.movie-form-buttons > * {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.movie-form-suggestions {
+  width: 100%;
+
+  margin-top: @vertical-margin;
+  padding-left: @horizontal-margin;
+}
+
+div.movie-table {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -362,7 +361,7 @@ div.movie-table {
 }
 
 div.movie {
-  width: 90%;
+  width: 100%;
 
   padding: 8px;
   margin-bottom: @vertical-margin;

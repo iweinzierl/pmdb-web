@@ -67,8 +67,10 @@ class App extends React.Component {
                         searchListener={this.searchChanged.bind(this)}/>
                 <div className="content">
                     <Menu applicationState={this.state.applicationState}/>
-                    <MovieTable applicationState={this.state.applicationState} movies={this.state.filteredMovies}
-                                onMovieDeleteListener={this.deleteMovie.bind(this)}/>
+                    <div className="movie-collection">
+                        <MovieTable applicationState={this.state.applicationState} movies={this.state.filteredMovies}
+                                    onMovieDeleteListener={this.deleteMovie.bind(this)}/>
+                    </div>
                     <MovieFilter applicationState={this.state.applicationState}
                                  onFilterChange={this.onFilterChanged.bind(this)}/>
                 </div>

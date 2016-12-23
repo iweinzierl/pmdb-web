@@ -98,7 +98,7 @@ class MovieForm extends React.Component {
             <div className="movie-form-wrapper">
                 <div className="movie-form">
 
-                    <div className="movie-form-left">
+                    <div className="movie-form-side">
                         <div className="movie-form-input">
                             <label>Title</label>
                             <input type="text" value={this.state.title} placeholder="Title"
@@ -125,15 +125,20 @@ class MovieForm extends React.Component {
                         </div>
                     </div>
 
-                    <div className="movie-form-right">
-                        <div className="movie-form-cover">
-                            <img src={this.state.coverUrl}/>
+                    <div className="movie-form-side">
+                        <div className="movie-form-input">
+                            <label>Cover URL</label>
                             <input type="text" value={this.state.coverUrl} placeholder="http://cover.movie.org"
                                    onChange={this.handleCoverUrl.bind(this)}/>
                         </div>
-                        <div className="movie-form-genres-group">
+                        <div className="movie-form-cover">
+                            <img src={this.state.coverUrl}/>
+                        </div>
+                        <div className="movie-form-genres">
                             <label>Genres</label>
-                            {genresOptions}
+                            <div className="movie-form-genres-options">
+                                {genresOptions}
+                            </div>
                         </div>
                         <div className="movie-form-input">
                             <label>Format</label>
