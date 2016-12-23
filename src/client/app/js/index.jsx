@@ -139,7 +139,7 @@ class App extends React.Component {
         if (this.state.filter.title !== undefined && this.state.filter.title !== "") {
             const titleFilter = this.state.filter.title.toLowerCase();
             filteredMovies = filteredMovies.filter((movie) => {
-                return movie.title.toLowerCase().indexOf(titleFilter);
+                return movie.title.toLowerCase().indexOf(titleFilter) >= 0;
             });
         }
 
