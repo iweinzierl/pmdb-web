@@ -376,7 +376,11 @@ div.movie-table {
 
 div.movie {
   width: 100%;
-  max-width: 1000px;
+  max-width: 850px;
+
+  @media @screen-computer {
+    min-width: 800px;
+  }
 
   padding: 8px;
   margin-bottom: @vertical-margin;
