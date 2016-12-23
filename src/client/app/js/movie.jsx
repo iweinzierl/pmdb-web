@@ -311,7 +311,7 @@ class GenreFilter extends React.Component {
         const genresList = [];
         Object.entries(this.state.genres).forEach(function ([genre, state]) {
             genresList.push(
-                <div key={state.value}>
+                <div key={state.value} className="filter-item">
                     <input type="checkbox" name={state.value} key={state.value}
                            checked={self.state.genres[genre].checked}
                            value={self.state.genres[genre].enabled}
@@ -415,7 +415,7 @@ class FormatFilter extends React.Component {
         const formatList = [];
         Object.entries(this.state.formats).forEach(function ([format, state]) {
             formatList.push(
-                <div key={state.value}>
+                <div key={state.value} className="filter-item">
                     <input type="checkbox" name={state.value} key={state.value}
                            checked={self.state.formats[format].checked}
                            value={self.state.formats[format].enabled}

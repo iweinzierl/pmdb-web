@@ -228,7 +228,6 @@ div.menu-item > img {
 
 div.movie-collection {
   padding-left: @horizontal-margin;
-  padding-right: @horizontal-margin;
   padding-top: @vertical-margin;
 
   flex-grow: 1;
@@ -381,16 +380,13 @@ div.movie-table {
 
 div.movie {
   @media @screen-mobile {
-    width: 80%;
+    width: 95%;
   }
 
   @media @screen-computer {
     width: 100%;
-    max-width: 850px;
-  }
-
-  @media @screen-computer {
     min-width: 800px;
+    max-width: 850px;
   }
 
   padding: 8px;
@@ -398,6 +394,7 @@ div.movie {
 
   background-color: #ffffff;
   box-shadow: @box-shadow;
+  box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
@@ -645,6 +642,12 @@ div.movie-action > img:hover {
 div.filter-group {
   min-width: 150px;
 
+  @media @screen-mobile {
+    width: 100%;
+    padding-left: @horizontal-margin;
+  }
+
+  padding-left: @horizontal-margin;
   padding-right: @horizontal-margin;
 
   display: flex;
@@ -663,11 +666,32 @@ div.filter-group > label {
 
 div.filter-block {
   min-width: 100px;
-  max-width: 200px;
+
+  @media @screen-computer {
+    max-width: 200px;
+  }
 
   margin-bottom: @vertical-margin;
 
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+}
+
+div.filter-item {
+  @media @screen-computer {
+    min-width: 150px;
+    padding: 2px;
+  }
+
+  @media @screen-mobile {
+    min-width: 200px;
+  }
+}
+
+div.filter-item > input {
+  @media @screen-mobile {
+    width: 32px;
+    height: 32px;
+  }
 }
