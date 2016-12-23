@@ -368,15 +368,19 @@ div.movie-form-genres > label {
 }
 
 div.movie-table {
-  display: flex;
-  flex-direction: column;
+  display: table;
   flex-grow: 1;
-  align-items: center;
 }
 
 div.movie {
-  width: 100%;
-  max-width: 850px;
+  @media @screen-mobile {
+    width: 80%;
+  }
+
+  @media @screen-computer {
+    width: 100%;
+    max-width: 850px;
+  }
 
   @media @screen-computer {
     min-width: 800px;
