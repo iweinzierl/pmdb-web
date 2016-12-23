@@ -85,15 +85,21 @@ class MovieRow extends React.Component {
                             <div className="movie-cell movie-publishdate">{this.props.movie.publishDate}</div>
                             <div className="movie-cell movie-genres">{genres}</div>
                         </div>
+                        <div className="movie-cell movie-genres-mobile">{genres}</div>
                     </div>
                     <MovieActionBar applicationState={this.props.applicationState} movie={this.props.movie}
                                     display={this.state.displayActions}
                                     onMovieDeleteListener={this.props.onMovieDeleteListener}/>
                 </div>
                 <div className="movie-detail" style={this.state.styleDetails}>
-                    <span>
+                    <div className="movie-meta-info-wrapper-mobile">
+                        <div className="movie-cell movie-format">{this.props.movie.format}</div>
+                        <div className="movie-cell movie-length">{this.props.movie.length} min</div>
+                        <div className="movie-cell movie-publishdate">{this.props.movie.publishDate}</div>
+                    </div>
+                    <div>
                         {this.props.movie.description}
-                    </span>
+                    </div>
                 </div>
             </div>
         );
