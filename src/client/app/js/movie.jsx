@@ -48,7 +48,7 @@ class MovieRow extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            displayActions: "none",
+            actionBarCss: "movie-action-bar-hidden",
             style: {
                 cursor: props.onMovieClickListener === undefined ? "default" : "pointer"
             },
@@ -88,7 +88,7 @@ class MovieRow extends React.Component {
                         <div className="movie-cell movie-genres-mobile">{genres}</div>
                     </div>
                     <MovieActionBar applicationState={this.props.applicationState} movie={this.props.movie}
-                                    display={this.state.displayActions}
+                                    css={this.state.actionBarCss}
                                     onMovieDeleteListener={this.props.onMovieDeleteListener}/>
                 </div>
                 <div className="movie-detail" style={this.state.styleDetails}>
@@ -120,13 +120,13 @@ class MovieRow extends React.Component {
 
     onMouseOver() {
         this.setState({
-            displayActions: "flex"
+            actionBarCss: "movie-action-bar movie-action-bar-visible"
         });
     }
 
     onMouseOut() {
         this.setState({
-            displayActions: "none"
+            actionBarCss: "movie-action-bar movie-action-bar-hidden"
         });
     }
 }
@@ -149,13 +149,14 @@ class MovieActionBar extends React.Component {
                                         imgSrc="http://ssl.gstatic.com/bt/C3341AA7A1A076756462EE2E5CD71C11/2x/btw_ic_mark_trash_black_24dp_2x.png"/>
         }
         return (
-            <div className="movie-action-bar" style={{display: this.props.display}}>
+            <div className={this.props.css}>
                 {deleteAction}
             </div>
         );
     }
 
-    deleteMovie() {
+    deleteMovie(e) {
+        e.stopPropagation();
         if (this.props.onMovieDeleteListener !== undefined && this.props.onMovieDeleteListener !== null) {
             this.props.onMovieDeleteListener(this.props.movie);
         }

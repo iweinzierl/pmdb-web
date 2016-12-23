@@ -604,9 +604,26 @@ div.movie-action-bar {
   align-items: center;
 }
 
+div.movie-action-bar-visible {
+  display: flex;
+}
+
+div.movie-action-bar-hidden {
+  @media @screen-computer {
+    display: none;
+  }
+}
+
 div.movie-action {
-  width: 24px;
-  height: 24px;
+  @media @screen-computer {
+    width: 24px;
+    height: 24px;
+  }
+
+  @media @screen-mobile {
+    width: 48px;
+    height: 48px;
+  }
 }
 
 div.movie-action-clicked {
