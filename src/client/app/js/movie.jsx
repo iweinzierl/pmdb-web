@@ -225,14 +225,11 @@ class MovieFilter extends React.Component {
     render() {
         return (
             <div className="filter-group">
-                <div className="filter-block">
-                    <GenreFilter applicationState={this.props.applicationState}
-                                 onFilterChange={this.genreFilterChanged.bind(this)}/>
-                </div>
-                <div className="filter-block">
-                    <FormatFilter applicationState={this.props.applicationState}
-                                  onFilterChange={this.formatFilterChanged.bind(this)}/>
-                </div>
+                <label>Filter</label>
+                <GenreFilter applicationState={this.props.applicationState}
+                             onFilterChange={this.genreFilterChanged.bind(this)}/>
+                <FormatFilter applicationState={this.props.applicationState}
+                              onFilterChange={this.formatFilterChanged.bind(this)}/>
             </div>
         );
     }
@@ -307,20 +304,20 @@ class GenreFilter extends React.Component {
         const genresList = [];
         Object.entries(this.state.genres).forEach(function ([genre, state]) {
             genresList.push(
-                <li key={state.value}>
+                <div key={state.value}>
                     <input type="checkbox" name={state.value} key={state.value}
                            checked={self.state.genres[genre].checked}
                            value={self.state.genres[genre].enabled}
                            onChange={self.onGenresChange.bind(self)}/>
                     {state.label}
-                </li>
+                </div>
             );
         });
 
         return (
-            <ul key="genre">
+            <div key="genre" className="filter-block">
                 {genresList}
-            </ul>
+            </div>
         );
     }
 
@@ -411,20 +408,20 @@ class FormatFilter extends React.Component {
         const formatList = [];
         Object.entries(this.state.formats).forEach(function ([format, state]) {
             formatList.push(
-                <li key={state.value}>
+                <div key={state.value}>
                     <input type="checkbox" name={state.value} key={state.value}
                            checked={self.state.formats[format].checked}
                            value={self.state.formats[format].enabled}
                            onChange={self.onFormatChange.bind(self)}/>
                     {state.label}
-                </li>
+                </div>
             );
         });
 
         return (
-            <ul key="format">
+            <div key="format" className="filter-block">
                 {formatList}
-            </ul>
+            </div>
         );
     }
 
