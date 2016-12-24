@@ -15,10 +15,6 @@ class MovieForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: {
-                content: "",
-                open: false
-            },
             genresOptions: [
                 "Action",
                 "Comedy",
@@ -151,12 +147,16 @@ class MovieForm extends React.Component {
                 </div>
 
                 <div className="movie-form-buttons">
+                    <div className="button" onClick={this.onSubmit.bind(this)}>
+                        Save
+                    </div>
+
                     <div className="button" onClick={this.search.bind(this)}>
                         Search
                     </div>
 
-                    <div className="button" onClick={this.onSubmit.bind(this)}>
-                        Save
+                    <div className="button" onClick={this.reset.bind(this)}>
+                        Reset
                     </div>
                 </div>
 
@@ -169,8 +169,9 @@ class MovieForm extends React.Component {
     }
 
     onSuggestionClicked(movie) {
-        const self = this;
+        this.reset();
 
+        const self = this;
         new MovieSearchResource(this.props.applicationState.accessToken).get(
             movie.id,
             function (movieDetails) {
@@ -273,7 +274,6 @@ class MovieForm extends React.Component {
     }
 
     onSubmit() {
-        const self = this;
         const genres = [];
         Object.entries(this.state.genres).forEach(function ([genre, state]) {
             if (state.value == "on") {
@@ -318,6 +318,26 @@ class MovieForm extends React.Component {
                 });
             }
         );
+    }
+
+    reset() {
+        const genres = {};
+        Object.keys(this.state.genres).forEach((genre) => {
+            genres[genre] = {
+                value: "off",
+                checked: false
+            };
+        });
+
+        this.setState({
+            genres: genres,
+            title: "",
+            length: "",
+            publishDate: "",
+            format: "",
+            description: "",
+            coverUrl: ""
+        });
     }
 }
 
