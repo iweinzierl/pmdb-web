@@ -71,6 +71,9 @@ class MovieRow extends React.Component {
                  onMouseOver={this.onMouseOver.bind(this)}
                  onMouseLeave={this.onMouseOut.bind(this)}>
                 <div className="movie-preview">
+                    <div className="movie-cell movie-title-wrapper-phone">
+                        <div className="movie-cell movie-title">{this.props.movie.title}</div>
+                    </div>
                     <div className="movie-cell movie-cover">
                         <img src={this.props.movie.coverUrl}/>
                     </div>

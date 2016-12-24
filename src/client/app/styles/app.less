@@ -1,5 +1,6 @@
+@screen-phone: ~"screen and (max-width: 449px)";
+@screen-mobile: ~"screen and (min-width: 450px) and (max-width: 799px)";
 @screen-computer: ~"screen and (min-width: 800px)";
-@screen-mobile: ~"screen and (max-width: 799px)";
 
 @primary-color: rgba(229, 229, 229, 0.31);
 @secondary-color: #4285f4;
@@ -18,13 +19,15 @@
 
 @movie-row-height-computer: 75px;
 @movie-row-height-mobile: 125px;
+@movie-row-height-phone: 175px;
 
 @header-content-height: 35px;
 
 @container-max-width: 350px;
 
 @font-size-computer: 10pt;
-@font-size-mobile: 16pt;
+@font-size-mobile: 13pt;
+@font-size-phone: 13pt;
 
 body {
   background-color: @primary-color;
@@ -227,10 +230,25 @@ div.menu-item > img {
 }
 
 div.movie-collection {
+  @media @screen-computer {
+    width: 70%;
+  }
+
+  @media @screen-mobile {
+    width: 100%;
+  }
+
+  @media @screen-phone {
+    width: 100%;
+  }
+
   padding-left: @horizontal-margin;
   padding-top: @vertical-margin;
 
   flex-grow: 1;
+
+  display: block;
+  box-sizing: border-box;
 }
 
 div.menu-item > span {
@@ -374,11 +392,15 @@ div.movie-form-genres > label {
 }
 
 div.movie-table {
-  display: table;
+  display: block;
   flex-grow: 1;
 }
 
 div.movie {
+  @media @screen-phone {
+    width: 95%;
+  }
+
   @media @screen-mobile {
     width: 95%;
   }
@@ -402,18 +424,24 @@ div.movie {
 
 div.movie-preview {
   width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  flex-wrap: wrap;
+
+  @media @screen-phone {
+    height: @movie-row-height-phone;
+    flex-direction: row;
+  }
+
+  @media @screen-mobile {
+    height: @movie-row-height-mobile;
+    flex-direction: row;
+  }
 
   @media @screen-computer {
     height: @movie-row-height-computer;
+    flex-direction: row;
   }
-  @media @screen-mobile {
-    height: @movie-row-height-mobile;
-  }
-
-  background-color: #ffffff;
-
-  display: flex;
-  flex-direction: row;
 }
 
 div.movie-detail {
@@ -427,6 +455,10 @@ div.movie-detail {
 }
 
 div.movie-cell {
+  @media @screen-phone {
+    padding-left: 0px;
+  }
+
   padding-left: 16px;
   padding-right: 16px;
 }
@@ -442,6 +474,9 @@ div.movie-content {
   @media @screen-mobile {
     height: @movie-row-height-mobile;
   }
+  @media @screen-phone {
+    height: @movie-row-height-phone;
+  }
 
   overflow: hidden;
 
@@ -455,13 +490,19 @@ div.movie-content {
 }
 
 div.movie-cover {
-  @media @screen-computer {
-    width: @movie-row-height-computer;
-    height: @movie-row-height-computer;
+  @media @screen-phone {
+    width: @movie-row-height-mobile;
+    height: @movie-row-height-mobile;
   }
+
   @media @screen-mobile {
     width: @movie-row-height-mobile;
     height: @movie-row-height-mobile;
+  }
+
+  @media @screen-computer {
+    width: @movie-row-height-computer;
+    height: @movie-row-height-computer;
   }
 }
 
@@ -474,6 +515,22 @@ div.movie-cover > img {
     width: @movie-row-height-mobile;
     height: @movie-row-height-mobile;
   }
+  @media @screen-phone {
+    width: @movie-row-height-mobile;
+    height: @movie-row-height-mobile;
+  }
+}
+
+div.movie-title-wrapper-phone {
+  @media @screen-mobile {
+    display: none;
+  }
+  @media @screen-computer {
+    display: none;
+  }
+
+  width: 100%;
+  padding-bottom: @vertical-margin;
 }
 
 div.movie-title-desc-wrapper {
@@ -483,6 +540,9 @@ div.movie-title-desc-wrapper {
   }
   @media @screen-mobile {
     height: @movie-row-height-mobile/2;
+  }
+  @media @screen-phone {
+    display: none;
   }
 
   display: flex;
@@ -498,7 +558,9 @@ div.movie-meta-info-wrapper {
     height: @movie-row-height-computer/2;
   }
   @media @screen-mobile {
-    height: @movie-row-height-mobile/2;
+    display: none;
+  }
+  @media @screen-phone {
     display: none;
   }
 
@@ -529,6 +591,9 @@ div.movie-title {
 
 div.movie-description {
   @media @screen-mobile {
+    display: none;
+  }
+  @media @screen-phone {
     display: none;
   }
 
@@ -566,8 +631,15 @@ div.movie-genres-mobile {
     display: none;
   }
 
+  @media @screen-phone {
+    height: @movie-row-height-mobile;
+    flex-wrap: wrap;
+  }
+
   width: 100%;
   height: @movie-row-height-mobile/2;
+
+  box-sizing: border-box;
 
   color: @text-secondary-color;
 
@@ -575,6 +647,7 @@ div.movie-genres-mobile {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  align-content: space-around;
 }
 
 div.movie-genres > * {
@@ -586,10 +659,12 @@ div.movie-genres-mobile > * {
 }
 
 div.movie-action-bar {
-  @media @screen-computer {
-    height: @movie-row-height-computer/2;
-  }
+  height: @movie-row-height-computer/2;
+
   @media @screen-mobile {
+    height: @movie-row-height-mobile/2;
+  }
+  @media @screen-phone {
     height: @movie-row-height-mobile/2;
   }
 
@@ -631,6 +706,15 @@ div.movie-action-clicked {
 div.movie-action > img {
   width: 100%;
   height: 100%;
+
+  @media @screen-mobile {
+    width: 48px;
+    height: 48px;
+  }
+  @media @screen-phone {
+    width: 48px;
+    height: 48px;
+  }
 
   opacity: 0.6;
 }
