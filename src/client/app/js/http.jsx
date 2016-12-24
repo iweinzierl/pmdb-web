@@ -9,6 +9,10 @@ function queryParams(params) {
 }
 
 function processError(response, errorCallback) {
+    if (response.status == 401 || response.status == 403) {
+        window.location = config.pmdb.paths.login;
+    }
+
     if (errorCallback !== undefined) {
         const contentType = response.headers.get("content-type");
 
@@ -38,16 +42,13 @@ UsersResource.prototype.get = function (successCallback, errorCallback) {
     console.log("GET /user");
 
     const headers = new Headers({
-        "Accept": "application/json",
         "X-Authorization": this.accessToken
     });
 
     fetch(config.pmdb.paths.user, {headers: headers})
         .then(function (response) {
-            if (response.status >= 400) {
-                if (errorCallback !== undefined) {
-                    processError(response, errorCallback);
-                }
+            if (!response.ok) {
+                processError(response, errorCallback);
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
@@ -83,10 +84,8 @@ MoviesResource.prototype.get = function (successCallback, errorCallback) {
 
     fetch(config.pmdb.paths.movies, {headers: headers})
         .then(function (response) {
-            if (response.status >= 400) {
-                if (errorCallback !== undefined) {
-                    processError(response, errorCallback);
-                }
+            if (!response.ok) {
+                processError(response, errorCallback);
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
@@ -119,7 +118,7 @@ MoviesResource.prototype.post = function (movie, successCallback, errorCallback)
 
     fetch(config.pmdb.paths.movies, params)
         .then(function (response) {
-            if (response.status >= 400) {
+            if (!response.ok) {
                 processError(response, errorCallback);
             }
             else if (successCallback !== undefined) {
@@ -151,10 +150,8 @@ MoviesResource.prototype.delete = function (movie, successCallback, errorCallbac
 
     fetch(config.pmdb.paths.movies + "/" + movie.id, params)
         .then(function (response) {
-            if (response.status >= 400) {
-                if (errorCallback !== undefined) {
-                    processError(response, errorCallback);
-                }
+            if (!response.ok) {
+                processError(response, errorCallback);
             }
             else if (successCallback !== undefined) {
                 successCallback();
@@ -188,10 +185,8 @@ GenresResource.prototype.get = function (successCallback, errorCallback) {
 
     fetch(config.pmdb.paths.genres, {headers: headers})
         .then(function (response) {
-            if (response.status >= 400) {
-                if (errorCallback !== undefined) {
-                    processError(response, errorCallback);
-                }
+            if (!response.ok) {
+                processError(response, errorCallback);
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
@@ -227,10 +222,8 @@ FormatsResource.prototype.get = function (successCallback, errorCallback) {
 
     fetch(config.pmdb.paths.formats, {headers: headers})
         .then(function (response) {
-            if (response.status >= 400) {
-                if (errorCallback !== undefined) {
-                    processError(response, errorCallback);
-                }
+            if (!response.ok) {
+                processError(response, errorCallback);
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
@@ -269,10 +262,8 @@ MovieSearchResource.prototype.search = function (title, successCallback, errorCa
 
     fetch(config.moviesearch.paths.search + "?" + queryParams({title: title}), params)
         .then(function (response) {
-            if (response.status >= 400) {
-                if (errorCallback !== undefined) {
-                    processError(response, errorCallback);
-                }
+            if (!response.ok) {
+                processError(response, errorCallback);
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
@@ -314,10 +305,8 @@ MovieSearchResource.prototype.get = function (id, successCallback, errorCallback
 
     fetch(config.moviesearch.paths.details + "/" + id, params)
         .then(function (response) {
-            if (response.status >= 400) {
-                if (errorCallback !== undefined) {
-                    processError(response, errorCallback);
-                }
+            if (!response.ok) {
+                processError(response, errorCallback);
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
