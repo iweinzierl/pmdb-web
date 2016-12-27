@@ -299,7 +299,7 @@ div.menu-item > span {
 }
 
 .movie-form-wrapper {
-  width: 80%;
+  width: 90%;
 
   padding-left: @horizontal-margin;
 
@@ -450,7 +450,7 @@ div.movie {
     width: 100%;
   }
 
-  padding: 8px;
+  padding: @vertical-margin @horizontal-margin;
   margin-bottom: @vertical-margin;
 
   background-color: #ffffff;
@@ -486,7 +486,9 @@ div.movie-preview {
 div.movie-detail {
   width: 100%;
 
-  padding-top: 8px;
+  box-sizing: border-box;
+
+  padding-top: @vertical-margin;
 
   display: flex;
   flex-direction: column;
@@ -543,6 +545,8 @@ div.movie-cover {
     width: @movie-row-height-computer;
     height: @movie-row-height-computer;
   }
+
+  padding-left: 0;
 }
 
 div.movie-cover > img {
