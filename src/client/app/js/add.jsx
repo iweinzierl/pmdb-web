@@ -5,8 +5,13 @@ require("../styles/app.less");
 import React from "react";
 import {render} from "react-dom";
 
+// Needed for onTouchTap, see http://stackoverflow.com/a/34015469/988941
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import Header from "./header.jsx";
-import Menu from "./menu.jsx";
 import MovieForm from "./movie_form.jsx";
 
 const App = React.createClass({
@@ -51,14 +56,15 @@ const App = React.createClass({
 
     render: function () {
         return (
-            <div className="body">
-                <Header applicationState={this.state.applicationState} user={this.state.user}
-                        searchListener={this.searchChanged}/>
-                <div className="content">
-                    <Menu applicationState={this.state.applicationState}/>
-                    <MovieForm applicationState={this.state.applicationState}/>
+            <MuiThemeProvider>
+                <div className="body">
+                    <Header applicationState={this.state.applicationState} user={this.state.user}
+                            searchListener={this.searchChanged}/>
+                    <div className="content">
+                        <MovieForm applicationState={this.state.applicationState}/>
+                    </div>
                 </div>
-            </div>
+            </MuiThemeProvider>
         );
     }
 });

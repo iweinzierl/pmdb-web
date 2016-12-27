@@ -4,9 +4,16 @@ require("../styles/app.less");
 
 import React from "react";
 import {render} from "react-dom";
+
+// Needed for onTouchTap, see http://stackoverflow.com/a/34015469/988941
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import alertify from "alertify.js";
+
 import Header from "./header.jsx";
-import Menu from "./menu.jsx";
 import {MovieTable, MovieFilter} from "./movie.jsx";
 import {MoviesResource} from "./http.jsx";
 
@@ -62,19 +69,21 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="body">
-                <Header applicationState={this.state.applicationState} user={this.state.user}
-                        searchListener={this.searchChanged.bind(this)}/>
-                <div className="content">
-                    <Menu applicationState={this.state.applicationState}/>
-                    <div className="movie-collection">
-                        <MovieTable applicationState={this.state.applicationState} movies={this.state.filteredMovies}
-                                    onMovieDeleteListener={this.deleteMovie.bind(this)}/>
+            <MuiThemeProvider>
+                <div className="body">
+                    <Header applicationState={this.state.applicationState} user={this.state.user}
+                            searchListener={this.searchChanged.bind(this)}/>
+                    <div className="content">
+                        <div className="movie-collection">
+                            <MovieTable applicationState={this.state.applicationState}
+                                        movies={this.state.filteredMovies}
+                                        onMovieDeleteListener={this.deleteMovie.bind(this)}/>
+                        </div>
+                        <MovieFilter applicationState={this.state.applicationState}
+                                     onFilterChange={this.onFilterChanged.bind(this)}/>
                     </div>
-                    <MovieFilter applicationState={this.state.applicationState}
-                                 onFilterChange={this.onFilterChanged.bind(this)}/>
                 </div>
-            </div>
+            </MuiThemeProvider>
         );
     }
 

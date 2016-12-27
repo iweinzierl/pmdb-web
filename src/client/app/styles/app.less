@@ -4,6 +4,7 @@
 
 @primary-color: rgba(229, 229, 229, 0.31);
 @secondary-color: #4285f4;
+@secondary-color-dark: #195df4;
 @tertiary-color: green;
 
 @text-primary-color: #000;
@@ -13,7 +14,7 @@
 @box-shadow: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24);
 @box-shadow-hover: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0, 0, 0, .52), 0 2px 4px rgba(0, 0, 0, .74);
 
-@horizontal-margin: 30px;
+@horizontal-margin: 15px;
 @vertical-margin: 15px;
 @horizontal-margin-list: 15px;
 
@@ -99,6 +100,49 @@ div.body {
   flex-direction: column;
 }
 
+div.drawer-header {
+  background-color: @secondary-color-dark;
+  color: @text-tertiary-color;
+
+  padding: @vertical-margin @horizontal-margin;
+
+  display: flex;
+  flex-direction: column;
+}
+
+div.drawer-header-title {
+  color: @text-tertiary-color;
+  font-weight: 100;
+  font-size: xx-large;
+  letter-spacing: 3px;
+
+  padding-bottom: @vertical-margin;
+}
+
+div.user {
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+}
+
+div.user > img {
+  width: 50px;
+  height: 50px;
+
+  float: right;
+  margin-right: @horizontal-margin;
+
+  border-radius: 25px;
+}
+
+div.user > span {
+  flex-grow: 1;
+
+  font-weight: 100;
+  letter-spacing: 3px;
+}
+
 div.content {
   width: 100%;
   height: 100%;
@@ -112,6 +156,11 @@ div.header {
   width: 100%;
   height: 55px;
 
+  padding-left: @horizontal-margin;
+  padding-right: @horizontal-margin;
+
+  box-sizing: border-box;
+
   background-color: @secondary-color;
 
   display: flex;
@@ -123,33 +172,25 @@ div.header {
 
 div.header-menu {
   width: 250px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-div.header-menu > h1 {
+div.header-menu > span {
   padding-left: @horizontal-margin;
   margin: 0;
 
-  color: #fff;
+  color: @text-tertiary-color;
   font-weight: 100;
+  font-size: x-large;
   letter-spacing: 3px;
 }
 
 div.header-search {
   flex-grow: 5;
-}
-
-div.header-user {
-  width: 150px;
-}
-
-div.header-user > img {
-  width: @header-content-height;
-  height: @header-content-height;
-
-  float: right;
-  margin-right: @horizontal-margin;
-
-  border-radius: 17px;
 }
 
 div.search {

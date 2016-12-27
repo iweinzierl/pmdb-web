@@ -2,20 +2,28 @@
 
 import React from "react";
 
-const User = React.createClass({
+class User extends React.Component {
 
-    render: function () {
+    render() {
         let imageSource = "";
         let username = "";
+
         if (this.props.user !== undefined) {
             imageSource = this.props.user.profileImage;
             username = this.props.user.name;
         }
 
         return (
-            <img title={username} src={imageSource} />
+            <div className="user">
+                <img title={username} src={imageSource}/>
+                <span>{username}</span>
+            </div>
         );
     }
-});
+}
+
+User.propTypes = {
+    user: React.PropTypes.object.isRequired
+};
 
 export default User;
