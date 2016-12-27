@@ -16,6 +16,9 @@ import alertify from "alertify.js";
 import Header from "./header.jsx";
 import {MovieTable, MovieFilter} from "./movie.jsx";
 import {MoviesResource} from "./http.jsx";
+import {FormatsResource} from "./http.jsx";
+import {GenresResource} from "./http.jsx";
+import {Stats} from "./domain.jsx";
 
 class App extends React.Component {
 
@@ -24,6 +27,9 @@ class App extends React.Component {
         this.state = {
             user: undefined,
             movies: [],
+            genres: [],
+            formats: [],
+            stats: new Stats(),
             filter: {
                 title: undefined,
                 genres: undefined,
@@ -65,6 +71,8 @@ class App extends React.Component {
 
     authenticationVerified() {
         this.updateMovies();
+        this.updateFormats();
+        this.updateGenres();
     }
 
     render() {
@@ -72,7 +80,8 @@ class App extends React.Component {
             <MuiThemeProvider>
                 <div className="body">
                     <Header applicationState={this.state.applicationState} user={this.state.user}
-                            searchListener={this.searchChanged.bind(this)}/>
+                            searchListener={this.searchChanged.bind(this)}
+                            stats={this.state.stats}/>
                     <div className="content">
                         <div className="movie-collection">
                             <MovieTable applicationState={this.state.applicationState}
@@ -116,11 +125,46 @@ class App extends React.Component {
             function (data) {
                 self.setState({
                     movies: data
-                }, function () {
+                }, () => {
                     self.filter();
+                    self.updateStats();
                 });
             }
         );
+    }
+
+    updateGenres() {
+        const self = this;
+        new GenresResource(this.state.applicationState.accessToken).get(
+            (data) => {
+                this.setState({
+                    genres: data
+                }, self.updateStats);
+            }
+        );
+    }
+
+    updateFormats() {
+        const self = this;
+        new FormatsResource(this.state.applicationState.accessToken).get(
+            (data) => {
+                this.setState({
+                    formats: data
+                }, self.updateStats);
+            }
+        );
+    }
+
+    updateStats() {
+        const stats = Stats.builder()
+            .withGenres(this.state.genres)
+            .withFormats(this.state.formats)
+            .withMovies(this.state.movies)
+            .build();
+
+        this.setState({
+            stats: stats
+        });
     }
 
     searchChanged(searchValue) {

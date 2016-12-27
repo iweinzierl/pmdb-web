@@ -98,7 +98,99 @@ class MovieBuilder {
     }
 }
 
+class Stats {
+
+    constructor() {
+        this.numberOfMovies = 0;
+        this.formats = {};
+        this.genres = {};
+    }
+
+    getNumberOfMovies() {
+        return this.numberOfMovies;
+    }
+
+    getNumberOfFormats() {
+        return Object.keys(this.formats).length;
+    }
+
+    getNumberOfGenres() {
+        return Object.keys(this.genres).length;
+    }
+
+    static builder() {
+        return new StatsBuilder();
+    }
+}
+
+class StatsBuilder {
+
+    constructor() {
+        this.numberOfMovies = 0;
+        this.formats = {};
+        this.genres = {};
+    }
+
+    withMovies(movies) {
+        this.numberOfMovies = movies.length;
+        return this;
+    }
+
+    withFormats(formats) {
+        if (formats !== undefined && formats !== null) {
+            formats.forEach(this.withFormat, this);
+        }
+        return this;
+    }
+
+    withFormat(format) {
+        let formatStat = this.formats[format];
+
+        if (formatStat === undefined || formatStat === null) {
+            formatStat  = 1;
+        }
+        else {
+            formatStat = formatStat + 1;
+        }
+
+        this.formats[format] = formatStat;
+
+        return this;
+    }
+
+    withGenres(genres) {
+        if (genres !== undefined && genres !== null) {
+            genres.forEach(this.withGenre, this);
+        }
+        return this;
+    }
+
+    withGenre(genre) {
+        let genreStat = this.genres[genre];
+
+        if (genreStat === undefined || genreStat === null) {
+            genreStat  = 1;
+        }
+        else {
+            genreStat = genreStat + 1;
+        }
+
+        this.genres[genre] = genreStat;
+
+        return this;
+    }
+
+    build() {
+        const stats = new Stats();
+        stats.numberOfMovies = this.numberOfMovies;
+        stats.formats = this.formats || {};
+        stats.genres = this.genres || {};
+        return stats;
+    }
+}
+
 
 module.exports = {
-    Movie: Movie
+    Movie: Movie,
+    Stats: Stats
 };
