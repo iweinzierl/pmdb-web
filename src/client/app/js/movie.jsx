@@ -36,6 +36,7 @@ class MovieTable extends React.Component {
 }
 
 MovieTable.propTypes = {
+    movies: React.PropTypes.arrayOf(React.PropTypes.object),
     onMovieClickListener: React.PropTypes.func,
     onMovieDeleteListener: React.PropTypes.func
 };
@@ -59,7 +60,7 @@ class MovieRow extends React.Component {
     }
 
     render() {
-        const genres = this.props.movie.genres
+        const genres = this.props.movie.getGenres()
             .map(function (genre) {
                 return (
                     <Label key={genre.name} message={genre.name}/>
@@ -72,20 +73,20 @@ class MovieRow extends React.Component {
                  onMouseLeave={this.onMouseOut.bind(this)}>
                 <div className="movie-preview">
                     <div className="movie-cell movie-title-wrapper-phone">
-                        <div className="movie-cell movie-title">{this.props.movie.title}</div>
+                        <div className="movie-cell movie-title">{this.props.movie.getTitle()}</div>
                     </div>
                     <div className="movie-cell movie-cover">
-                        <img src={this.props.movie.coverUrl}/>
+                        <img src={this.props.movie.getCoverUrl()}/>
                     </div>
                     <div className="movie-content">
                         <div className="movie-title-desc-wrapper">
-                            <div className="movie-cell movie-title">{this.props.movie.title}</div>
-                            <div className="movie-cell movie-description">{this.props.movie.description}</div>
+                            <div className="movie-cell movie-title">{this.props.movie.getTitle()}</div>
+                            <div className="movie-cell movie-description">{this.props.movie.getDescription()}</div>
                         </div>
                         <div className="movie-meta-info-wrapper">
-                            <div className="movie-cell movie-format">{this.props.movie.format}</div>
-                            <div className="movie-cell movie-length">{this.props.movie.length} min</div>
-                            <div className="movie-cell movie-publishdate">{this.props.movie.publishDate}</div>
+                            <div className="movie-cell movie-format">{this.props.movie.getFormat()}</div>
+                            <div className="movie-cell movie-length">{this.props.movie.getLength()} min</div>
+                            <div className="movie-cell movie-publishdate">{this.props.movie.getReleaseDate()}</div>
                             <div className="movie-cell movie-genres">{genres}</div>
                         </div>
                         <div className="movie-cell movie-genres-mobile">{genres}</div>
@@ -96,12 +97,12 @@ class MovieRow extends React.Component {
                 </div>
                 <div className="movie-detail" style={this.state.styleDetails}>
                     <div className="movie-meta-info-wrapper-mobile">
-                        <div className="movie-cell movie-format">{this.props.movie.format}</div>
-                        <div className="movie-cell movie-length">{this.props.movie.length} min</div>
-                        <div className="movie-cell movie-publishdate">{this.props.movie.publishDate}</div>
+                        <div className="movie-cell movie-format">{this.props.movie.getFormat()}</div>
+                        <div className="movie-cell movie-length">{this.props.movie.getLength()} min</div>
+                        <div className="movie-cell movie-publishdate">{this.props.movie.getReleaseDate()}</div>
                     </div>
                     <div>
-                        {this.props.movie.description}
+                        {this.props.movie.getDescription()}
                     </div>
                 </div>
             </div>
@@ -135,6 +136,7 @@ class MovieRow extends React.Component {
 }
 
 MovieRow.propTypes = {
+    movie: React.PropTypes.object,
     onMovieClickListener: React.PropTypes.func,
     onMovieDeleteListener: React.PropTypes.func
 };

@@ -2,6 +2,8 @@
 
 const config = require("../../../../config.js");
 
+import {Movie} from "./domain.jsx";
+
 function queryParams(params) {
     return Object.keys(params)
         .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
@@ -26,6 +28,61 @@ function processError(response, errorCallback) {
             });
         }
     }
+}
+
+function mapPmdbMovie(movie) {
+    return Movie.builder()
+        .withId(movie.id)
+        .withTitle(movie.title)
+        .withDescription(movie.description)
+        .withCoverUrl(movie.coverUrl)
+        .withReleaseDate(movie.publishDate)
+        .withLength(movie.length)
+        .withFormat(movie.format)
+        .withGenres(movie.genres)
+        .build();
+}
+
+function mapSearchMovie(movie) {
+    return Movie.builder()
+        .withId(movie.id)
+        .withTitle(movie.title)
+        .withDescription(movie.description)
+        .withCoverUrl(movie.coverUrl)
+        .withReleaseDate(mapSearchReleaseDate(movie.published))
+        .withLength(movie.length)
+        .withFormat(movie.format)
+        .withGenres(mapSearchGenres(movie.genres))
+        .build();
+}
+
+function mapSearchReleaseDate(date) {
+    if (date !== null && date !== undefined) {
+        const year = date[0];
+        let month = date[1];
+        let day = date[2];
+
+        if (month < 10) {
+            month = "0" + month;
+        }
+
+        if (day < 10) {
+            day = "0" + day;
+        }
+
+        return year + "-" + month + "-" + day;
+    }
+
+    return null;
+}
+
+function mapSearchGenres(genres) {
+    return genres.map((genre) => {
+        return {
+            id: null,
+            name: genre
+        };
+    });
 }
 
 /**
@@ -89,7 +146,7 @@ MoviesResource.prototype.get = function (successCallback, errorCallback) {
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
-                    successCallback(data);
+                    successCallback(data.map(mapPmdbMovie));
                 });
             }
         })
@@ -123,7 +180,7 @@ MoviesResource.prototype.post = function (movie, successCallback, errorCallback)
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
-                    successCallback(data);
+                    successCallback(mapPmdbMovie(data));
                 });
             }
         })
@@ -267,20 +324,9 @@ MovieSearchResource.prototype.search = function (title, successCallback, errorCa
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
-                    successCallback(data.map((result) => {
-                        return {
-                            id: result.id,
-                            title: result.title,
-                            length: result.length,
-                            coverUrl: result.coverUrl,
-                            description: result.description,
-                            publishDate: result.published !== null ? result.published[0] + "-" + result.published[1] + "-" + result.published[2] : "",
-                            genres: result.genres.map((genre) => {
-                                return {id: null, name: genre};
-                            })
-                        }
-                    }));
-                });
+                        successCallback(data.map(mapSearchMovie));
+                    }
+                );
             }
         })
         .catch(function (error) {
@@ -310,7 +356,7 @@ MovieSearchResource.prototype.get = function (id, successCallback, errorCallback
             }
             else if (successCallback !== undefined) {
                 response.json().then(function (data) {
-                    successCallback(data);
+                    successCallback(mapSearchMovie(data));
                 });
             }
         })

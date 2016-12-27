@@ -183,37 +183,26 @@ class MovieForm extends React.Component {
     applySuggestion(movie) {
         const genresOptions = this.state.genresOptions;
         const genres = this.state.genres;
-        movie.genres.forEach(function (genre) {
-            genres[genre] = {
+        movie.getGenres().forEach(function (genre) {
+            genres[genre.name] = {
                 value: "on",
                 checked: true
             };
 
-            if (genresOptions.indexOf(genre) < 0) {
-                genresOptions.push(genre);
+            if (genresOptions.indexOf(genre.name) < 0) {
+                genresOptions.push(genre.name);
             }
         });
 
         this.setState({
-            title: movie.title,
-            publishDate: MovieForm.convertPublishDate(movie.published),
-            length: movie.length,
+            title: movie.getTitle(),
+            publishDate: movie.getReleaseDate(),
+            length: movie.getLength(),
             genres: genres,
             genresOptions: genresOptions,
-            coverUrl: movie.coverUrl,
-            description: movie.description
+            coverUrl: movie.getCoverUrl(),
+            description: movie.getDescription()
         });
-    }
-
-    static convertPublishDate(publishDate) {
-        if (publishDate === undefined || publishDate === null || typeof publishDate !== "object" || publishDate.length < 3) {
-            return "";
-        }
-
-        const month = publishDate[1] < 10 ? "0" + publishDate[1] : publishDate[1];
-        const day = publishDate[2] < 10 ? "0" + publishDate[2] : publishDate[2];
-
-        return publishDate[0] + "-" + month + "-" + day;
     }
 
     handleTitleEnter(evt) {
