@@ -341,10 +341,14 @@ div.menu-item > span {
   display: flex;
   flex-direction: column;
 
+  flex-grow: 1;
+
   padding-left: @horizontal-margin;
 }
 
 .movie-form-input {
+  width: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -361,15 +365,6 @@ div.movie-form-input > label {
 
 div.movie-form-input > input {
   min-width: @container-max-width;
-
-  font-size: initial;
-
-  padding: 8px;
-}
-
-div.movie-form-input > textarea {
-  min-width: @container-max-width;
-  min-height: 110px;
 
   font-size: initial;
 

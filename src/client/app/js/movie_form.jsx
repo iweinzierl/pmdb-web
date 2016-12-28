@@ -6,6 +6,11 @@ import React from "react";
 import alertify from "alertify.js";
 import pretty from "js-object-pretty-print";
 
+import Checkbox from 'material-ui/Checkbox';
+import MenuItem from 'material-ui/MenuItem';
+import SelectField from 'material-ui/SelectField';
+import TextField from 'material-ui/TextField';
+
 import {MovieTable} from "./movie.jsx";
 import {MoviesResource} from "./http.jsx";
 import {MovieSearchResource} from "./http.jsx";
@@ -78,7 +83,7 @@ class MovieForm extends React.Component {
                 <div key={genre}>
                     <input type="checkbox" name={genre} value={self.state.genres[genre].value}
                            checked={self.state.genres[genre].checked}
-                           onChange={self.handleGenres}/>
+                           onChange={self.handleGenres.bind(self)}/>
                     <span>{genre}</span>
                 </div>
             );
@@ -86,7 +91,7 @@ class MovieForm extends React.Component {
 
         const formatOptions = this.state.formatOptions.map(function (format) {
             return (
-                <option key={format.value} name={format.value} value={format.value}>{format.label}</option>
+                <MenuItem key={format.value} value={format.value} primaryText={format.label}/>
             );
         });
 
@@ -97,35 +102,36 @@ class MovieForm extends React.Component {
                     <div className="movie-form-side">
                         <div className="movie-form-input">
                             <label>Title</label>
-                            <input type="text" value={this.state.title} placeholder="Title"
-                                   onChange={this.handleTitle.bind(this)}
-                                   onKeyPress={this.handleTitleEnter.bind(this)}/>
+                            <TextField value={this.state.title} hintText="Title" onChange={this.handleTitle.bind(this)}
+                                       onKeyPress={this.handleTitleEnter.bind(this)} fullWidth={true}/>
                         </div>
 
                         <div className="movie-form-input">
                             <label>Length</label>
-                            <input type="text" value={this.state.length} placeholder="Length in minutes"
-                                   onChange={this.handleLength.bind(this)}/>
+                            <TextField value={this.state.length} fullWidth={true} hintText="Length in minutes"
+                                       onChange={this.handleLength.bind(this)}/>
                         </div>
 
                         <div className="movie-form-input">
                             <label>Release Date</label>
-                            <input type="text" value={this.state.publishDate}
-                                   placeholder="Published at (yyyy-MM-dd)"
-                                   onChange={this.handlePublishDate.bind(this)}/>
+                            <TextField value={this.state.publishDate} fullWidth={true}
+                                       hintText="Published at (yyyy-MM-dd)"
+                                       onChange={this.handlePublishDate.bind(this)}/>
                         </div>
 
                         <div className="movie-form-input">
                             <label>Description</label>
-                            <textarea value={this.state.description} onChange={this.handleDescription.bind(this)}/>
+                            <TextField value={this.state.description} fullWidth={true}
+                                       onChange={this.handleDescription.bind(this)}
+                                       multiLine={true}/>
                         </div>
                     </div>
 
                     <div className="movie-form-side">
                         <div className="movie-form-input">
                             <label>Cover URL</label>
-                            <input type="text" value={this.state.coverUrl} placeholder="http://cover.movie.org"
-                                   onChange={this.handleCoverUrl.bind(this)}/>
+                            <TextField value={this.state.coverUrl} fullWidth={true} hintText="http://cover.movie.org"
+                                       onChange={this.handleCoverUrl.bind(this)}/>
                         </div>
                         <div className="movie-form-cover">
                             <img src={this.state.coverUrl}/>
@@ -138,10 +144,10 @@ class MovieForm extends React.Component {
                         </div>
                         <div className="movie-form-input">
                             <label>Format</label>
-                            <select value={this.state.format} onChange={this.handleFormat.bind(this)}>
-                                <option name="undefined" value="undefined">choose ...</option>
+                            <SelectField value={this.state.format} onChange={this.handleFormat.bind(this)} fullWidth={true}>
+                                <MenuItem key="undefined" value="undefined" primaryText="choose ..."/>
                                 {formatOptions}
-                            </select>
+                            </SelectField>
                         </div>
                     </div>
                 </div>
@@ -235,9 +241,9 @@ class MovieForm extends React.Component {
         });
     }
 
-    handleFormat(evt) {
+    handleFormat(evt, index, value) {
         this.setState({
-            format: evt.target.value
+            format: value
         });
     }
 
