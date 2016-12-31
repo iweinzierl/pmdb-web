@@ -93,7 +93,7 @@ class MovieBuilder {
         movie.releaseDate = this.releaseDate;
         movie.length = this.length;
         movie.format = this.format;
-        movie.genres = this.genres;
+        movie.genres = this.genres || [];
         return movie;
     }
 }
@@ -147,7 +147,7 @@ class StatsBuilder {
         let formatStat = this.formats[format];
 
         if (formatStat === undefined || formatStat === null) {
-            formatStat  = 1;
+            formatStat = 1;
         }
         else {
             formatStat = formatStat + 1;
@@ -169,7 +169,7 @@ class StatsBuilder {
         let genreStat = this.genres[genre];
 
         if (genreStat === undefined || genreStat === null) {
-            genreStat  = 1;
+            genreStat = 1;
         }
         else {
             genreStat = genreStat + 1;
@@ -190,7 +190,167 @@ class StatsBuilder {
 }
 
 
+/**
+ * A collection of filters relating to movie properties.
+ */
+class MovieFilter {
+
+    constructor(title, genres, formats) {
+        if (typeof title !== "string") {
+            throw new TypeError("Expected string, got " + typeof title);
+        }
+        if (typeof genres !== GenresFilter) {
+            throw new TypeError("Expected GenresFilter, got " + typeof genres);
+        }
+        if (typeof formats !== FormatsFilter) {
+            throw new TypeError("Expected FormatsFilter, got " + typeof formats);
+        }
+
+        this.titleFilter = title;
+        this.genresFilter = genres;
+        this.formatsFilter = formats;
+    }
+
+    getTitleFilter() {
+        return this.titleFilter;
+    }
+
+    getGenresFilter() {
+        return this.genresFilter;
+    }
+
+    getFormatsFilter() {
+        return this.formatsFilter;
+    }
+
+    matches(movie) {
+        console.warn("MovieFilter.matches(movie) currently not implemented!");
+    }
+
+    filter(movies) {
+        if (movies === null || movies === undefined) {
+            return [];
+        }
+
+        if (!isArray(movies)) {
+            throw new TypeError("Expected array, got " + typeof movies);
+        }
+
+        console.warn("MovieFilter.filter(movies) currently not implemented!");
+    }
+
+    static builder() {
+        return new MovieFilterBuilder();
+    }
+}
+
+
+class MovieFilterBuilder {
+    constructor() {
+        this.title = undefined;
+        this.genres = undefined;
+        this.formats = undefined;
+    }
+
+    withTitleFilter(title) {
+        if (typeof title !== "string") {
+            throw new TypeError("Expected string, got " + typeof title);
+        }
+
+        this.title = title;
+        return this;
+    }
+
+    withGenresFilter(genresFilter) {
+        if (typeof genresFilter !== GenresFilter) {
+            throw new TypeError("Expected GenresFilter, got " + typeof genresFilter);
+        }
+
+        this.genres = genresFilter;
+        return this;
+    }
+
+    withFormatsFilter(formatsFilter) {
+        if (typeof formatsFilter !== FormatsFilter) {
+            throw new TypeError("Expected FormatsFilter, got " + typeof formatsFilter);
+        }
+
+        this.formats = formatsFilter;
+        return this;
+    }
+
+    build() {
+        return new MovieFilter(this.title, this.genres, this.formats);
+    }
+}
+
+
+/**
+ * A filter that specifies which genres are enabled or disabled.
+ * Format is:
+ * {
+ *    enabled: [
+ *      "Action",
+ *      "Thriller"
+ *    ],
+ *    disabled: [
+ *      "Comedy",
+ *      "Documentation"
+ *    ]
+ * }
+ */
+class GenresFilter {
+
+    constructor(enabled, disabled) {
+        this.enabled = enabled;
+        this.disabled = disabled;
+    }
+
+    getEnabled() {
+        return this.enabled;
+    }
+
+    getDisabled() {
+        return this.disabled;
+    }
+}
+
+
+/**
+ * A filter that specifies which formats are enabled or disabled.
+ * Format is:
+ * {
+ *    enabled: [
+ *      "BLU-RAY",
+ *      "DVD"
+ *    ],
+ *    disabled: [
+ *      "GOOGLE_MOVIES",
+ *      "AMAZON_VIDEO"
+ *    ]
+ * }
+ */
+class FormatsFilter {
+
+    constructor(enabled, disabled) {
+        this.enabled = enabled;
+        this.disabled = disabled;
+    }
+
+    getEnabled() {
+        return this.enabled;
+    }
+
+    getDisabled() {
+        return this.disabled;
+    }
+}
+
+
 module.exports = {
     Movie: Movie,
-    Stats: Stats
+    Stats: Stats,
+    MovieFilter: MovieFilter,
+    GenresFilter: GenresFilter,
+    FormatsFilter: FormatsFilter
 };
