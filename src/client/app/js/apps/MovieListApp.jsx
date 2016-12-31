@@ -31,7 +31,7 @@ class MovieListApp extends React.Component {
 
     addTestMovie() {
         MovieStore.dispatch(
-            ActionCreators.MOVIE_ADD_TYPE(
+            ActionCreators.newAddMovieAction(
                 Movie.builder()
                     .withId(this.state.movies.length + 1)
                     .withTitle("Test Movie #" + (this.state.movies.length + 1))

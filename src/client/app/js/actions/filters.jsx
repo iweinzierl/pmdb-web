@@ -34,8 +34,8 @@ module.exports = {
         FILTER_FORMATS_UPDATE_TYPE: FILTER_FORMATS_UPDATE_TYPE
     },
     ActionCreators: {
-        FILTER_TITLE_UPDATE_TYPE: newUpdateTitleFilterAction,
-        FILTER_GENRES_UPDATE_TYPE: newUpdateGenresFilterAction,
-        FILTER_FORMATS_UPDATE_TYPE: newUpdateFormatsFilterAction
+        newUpdateTitleFilterAction: newUpdateTitleFilterAction,
+        newUpdateGenresFilterAction: newUpdateGenresFilterAction,
+        newUpdateFormatsFilterAction: newUpdateFormatsFilterAction
     }
 };

@@ -2,10 +2,15 @@
 
 import React from "react";
 import {render} from "react-dom";
-import {Provider} from "react-redux";
-import App from "../apps/MovieListApp.jsx";
+import {Router, Route, hashHistory} from 'react-router'
+import MainApp from "../apps/MainApp.jsx";
+import MovieListApp from "../apps/MovieListApp.jsx";
 
 render(
-    <App />,
+    <Router history={hashHistory}>
+        <Route path="/" component={MainApp}>
+            <Route path="/list" component={MovieListApp}/>
+        </Route>
+    </Router>,
     document.getElementById('app')
 );

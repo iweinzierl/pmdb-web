@@ -32,9 +32,9 @@ module.exports = {
         MOVIE_DELETE_TYPE: MOVIE_DELETE_TYPE
     },
     ActionCreators: {
-        MOVIES_ADD_TYPE: newAddMoviesAction,
-        MOVIE_ADD_TYPE: newAddMovieAction,
-        MOVIE_DELETE_TYPE: newDeleteMovieAction
+        newAddMoviesAction: newAddMoviesAction,
+        newAddMovieAction: newAddMovieAction,
+        newDeleteMovieAction: newDeleteMovieAction
     }
 };
 
