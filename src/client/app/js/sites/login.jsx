@@ -2,7 +2,7 @@
 
 import React from "react";
 import {render} from "react-dom";
-import LoginButton from "./login_button.jsx";
+import LoginButton from "../login_button.jsx";
 
 const LoginView = React.createClass({
 
