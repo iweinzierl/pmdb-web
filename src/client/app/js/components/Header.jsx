@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import {browserHistory} from "react-router";
 import Drawer from "material-ui/Drawer";
 import IconButton from "material-ui/IconButton";
 import MenuItem from "material-ui/MenuItem";
@@ -75,11 +76,13 @@ class Header extends React.Component {
     }
 
     openList() {
-        window.location = "/#/list";
+        this.context.router.push('/list');
+        this.toggleDrawer();
     }
 
     openMovieForm() {
-        window.location = "/#/create";
+        this.context.router.push('/create');
+        this.toggleDrawer();
     }
 
     toggleDrawer() {
@@ -88,5 +91,9 @@ class Header extends React.Component {
         });
     }
 }
+
+Header.contextTypes = {
+    router: React.PropTypes.object
+};
 
 export default Header;

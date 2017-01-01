@@ -15,9 +15,19 @@ class MovieListApp extends React.Component {
         super(props);
 
         this.state = MovieStore.getState();
-        MovieStore.subscribe(() => {
+        this.unsubscribeMovieStore = null;
+    }
+
+    componentWillMount() {
+        this.unsubscribeMovieStore = MovieStore.subscribe(() => {
             this.setState(MovieStore.getState());
         });
+    }
+
+    componentWillUnmount() {
+        if (this.unsubscribeMovieStore !== null) {
+            this.unsubscribeMovieStore();
+        }
     }
 
     render() {
