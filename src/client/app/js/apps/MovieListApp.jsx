@@ -37,7 +37,7 @@ class MovieListApp extends React.Component {
     render() {
         return (
             <div>
-                <MovieTable movies={this.state.movies}/>
+                <MovieTable key="collection" movies={this.state.movies}/>
             </div>
         );
     }

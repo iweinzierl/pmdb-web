@@ -77,7 +77,7 @@ class MovieView extends React.Component {
             this.props.onMovieClickListener(this.props.movie);
         }
 
-        const sd = this.state.styleDetails;
+        const sd = Object.create(this.state.styleDetails);
         sd.display = sd.display === "none" ? "flex" : "none";
 
         this.setState({
