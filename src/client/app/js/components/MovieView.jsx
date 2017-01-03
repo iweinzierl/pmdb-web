@@ -3,6 +3,7 @@
 require("../../styles/movie.less");
 
 import React from "react";
+import Label from "./Label.jsx";
 
 
 /**

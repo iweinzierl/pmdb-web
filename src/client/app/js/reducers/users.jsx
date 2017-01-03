@@ -15,6 +15,12 @@ const users = (state = {}, action) => {
 
     switch (action.type) {
         case ActionTypes.USER_LOGGED_IN_TYPE:
+            newState.accessToken = action.accessToken;
+
+            debug(state, newState);
+            return newState;
+
+        case ActionTypes.REFRESHED_CURRENT_USER_TYPE:
             newState.user = action.user;
 
             debug(state, newState);

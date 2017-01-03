@@ -1,12 +1,12 @@
 "use strict";
 
-const MOVIES_ADD_TYPE = "ADD_MOVIES";
+const MOVIES_REFRESHED_TYPE = "REFRESHED_MOVIES";
 const MOVIE_ADD_TYPE = "ADD_MOVIE";
 const MOVIE_DELETE_TYPE = "DELETE_MOVIE";
 
-const newAddMoviesAction = (movies) => {
+const newRefreshedMoviesAction = (movies) => {
     return {
-        type: MOVIES_ADD_TYPE,
+        type: MOVIES_REFRESHED_TYPE,
         movies: movies
     };
 };
@@ -27,12 +27,12 @@ const newDeleteMovieAction = (movie) => {
 
 module.exports = {
     ActionTypes: {
-        MOVIES_ADD_TYPE: MOVIES_ADD_TYPE,
+        MOVIES_REFRESHED_TYPE: MOVIES_REFRESHED_TYPE,
         MOVIE_ADD_TYPE: MOVIE_ADD_TYPE,
         MOVIE_DELETE_TYPE: MOVIE_DELETE_TYPE
     },
     ActionCreators: {
-        newAddMoviesAction: newAddMoviesAction,
+        newRefreshedMoviesAction: newRefreshedMoviesAction,
         newAddMovieAction: newAddMovieAction,
         newDeleteMovieAction: newDeleteMovieAction
     }

@@ -20,6 +20,12 @@ const movies = (state = {}, action) => {
             debug(state, newState);
             return newState;
 
+        case ActionTypes.MOVIES_REFRESHED_TYPE:
+            newState.movies = action.movies;
+
+            debug(state, newState);
+            return newState;
+
         case ActionTypes.MOVIE_DELETE_TYPE:
             newState.movies = state.movies.filter((movie) => {
                 return movie.id === action.movie.id

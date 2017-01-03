@@ -2,16 +2,6 @@
 
 import React from "react";
 import {render} from "react-dom";
-import LoginButton from "../login_button.jsx";
+import LoginApp from "../apps/LoginApp.jsx";
 
-const LoginView = React.createClass({
-
-    render: function() {
-        return (
-            <LoginButton />
-        );
-    }
-
-});
-
-render(<LoginView/>, document.getElementById('app'));
+render(<LoginApp/>, document.getElementById('app'));
