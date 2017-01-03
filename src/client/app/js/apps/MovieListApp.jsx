@@ -19,7 +19,8 @@ class MovieListApp extends React.Component {
 
     componentWillMount() {
         this.unsubscribeMovieStore = MovieStore.subscribe(() => {
-            this.setState(MovieStore.getState());
+            const newState = MovieStore.getState();
+            this.setState(newState);
         });
 
         if (!UserStore.getState().accessToken) {
@@ -35,9 +36,13 @@ class MovieListApp extends React.Component {
     }
 
     render() {
+        const collection = this.state.filter
+            ? this.state.filter.filter.filter(this.state.movies.movies)
+            : this.state.movies.movies;
+
         return (
             <div>
-                <MovieTable key="collection" movies={this.state.movies}/>
+                <MovieTable key="collection" movies={collection}/>
             </div>
         );
     }

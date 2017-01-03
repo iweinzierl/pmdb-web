@@ -1,12 +1,15 @@
 "use strict";
 
 import {ActionTypes} from "../actions/movies.jsx";
+import config from "../../../../../config.js";
 
 const debug = (oldState, newState) => {
-    console.debug("Old state -->");
-    console.debug(oldState);
-    console.debug("New state -->");
-    console.debug(newState);
+    if (config.pmdb.debug.reducer.movies) {
+        console.debug("Old state -->");
+        console.debug(oldState);
+        console.debug("New state -->");
+        console.debug(newState);
+    }
 };
 
 const movies = (state = {}, action) => {

@@ -196,13 +196,13 @@ class StatsBuilder {
 class MovieFilter {
 
     constructor(title, genres, formats) {
-        if (typeof title !== "string") {
+        if (title !== null && typeof title !== "string") {
             throw new TypeError("Expected string, got " + typeof title);
         }
-        if (typeof genres !== GenresFilter) {
+        if (genres !== null && typeof genres !== GenresFilter) {
             throw new TypeError("Expected GenresFilter, got " + typeof genres);
         }
-        if (typeof formats !== FormatsFilter) {
+        if (formats !== null && typeof formats !== FormatsFilter) {
             throw new TypeError("Expected FormatsFilter, got " + typeof formats);
         }
 
@@ -224,7 +224,25 @@ class MovieFilter {
     }
 
     matches(movie) {
-        console.warn("MovieFilter.matches(movie) currently not implemented!");
+        return this._matchesTitle(movie) && this._matchesGenres(movie) && this._matchesFormats(movie);
+    }
+
+    _matchesTitle(movie) {
+        return this.titleFilter !== null
+            ? movie.getTitle().toLowerCase().indexOf(this.titleFilter.toLowerCase()) >= 0
+            : true;
+    }
+
+    _matchesGenres(movie) {
+        return this.genresFilter !== null
+            ? this.genresFilter.matches(movie)
+            : true;
+    }
+
+    _matchesFormats(movie) {
+        return this.formatsFilter !== null
+            ? this.formatsFilter.matches(movie)
+            : true;
     }
 
     filter(movies) {
@@ -232,11 +250,11 @@ class MovieFilter {
             return [];
         }
 
-        if (!isArray(movies)) {
+        if (!Array.isArray(movies)) {
             throw new TypeError("Expected array, got " + typeof movies);
         }
 
-        console.warn("MovieFilter.filter(movies) currently not implemented!");
+        return movies.filter(this.matches.bind(this));
     }
 
     static builder() {
@@ -262,7 +280,7 @@ class MovieFilterBuilder {
     }
 
     withGenresFilter(genresFilter) {
-        if (typeof genresFilter !== GenresFilter) {
+        if (genresFilter !== null && typeof genresFilter !== GenresFilter) {
             throw new TypeError("Expected GenresFilter, got " + typeof genresFilter);
         }
 
@@ -271,7 +289,7 @@ class MovieFilterBuilder {
     }
 
     withFormatsFilter(formatsFilter) {
-        if (typeof formatsFilter !== FormatsFilter) {
+        if (formatsFilter !== null && typeof formatsFilter !== FormatsFilter) {
             throw new TypeError("Expected FormatsFilter, got " + typeof formatsFilter);
         }
 
@@ -313,6 +331,19 @@ class GenresFilter {
     getDisabled() {
         return this.disabled;
     }
+
+    matches(movie) {
+        let matches = false;
+        movie.getGenres().forEach((genre) => {
+            this.enabled.forEach((fGenre) => {
+                if (fGenre === genre) {
+                    matches = true;
+                }
+            });
+        }, this);
+
+        return matches;
+    }
 }
 
 
@@ -343,6 +374,17 @@ class FormatsFilter {
 
     getDisabled() {
         return this.disabled;
+    }
+
+    matches(movie) {
+        let matches = false;
+        this.enabled.forEach((format) => {
+            if (movie.getFormat() === format) {
+                matches = true;
+            }
+        });
+
+        return matches;
     }
 }
 

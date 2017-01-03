@@ -1,7 +1,10 @@
 "use strict";
 
+import { combineReducers } from "redux";
 import movies from "./movies.jsx";
+import filter from "./filter.jsx";
 
-// combine reducers
-
-export default movies;
+export default combineReducers({
+    filter,
+    movies
+});
