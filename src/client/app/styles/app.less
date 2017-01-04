@@ -4,6 +4,7 @@
 @movie-row-height-mobile: 125px;
 @movie-row-height-phone: 175px;
 
+@header-height: 55px;
 @header-content-height: 35px;
 
 @container-max-width: 350px;
@@ -73,7 +74,7 @@ div.button:hover {
 div.body {
   width: 95%;
 
-  margin: @vertical-margin auto;
+  margin: @vertical-margin+@header-height auto;
 
   display: flex;
   flex-direction: column;
@@ -153,7 +154,10 @@ div.content {
 
 div.header {
   width: 100%;
-  height: 55px;
+  height: @header-height;
+
+  position: fixed;
+  top: 0;
 
   padding-left: @horizontal-margin;
   padding-right: @horizontal-margin;
