@@ -37,8 +37,8 @@ class MovieListApp extends React.Component {
 
     render() {
         const collection = this.state.filter
-            ? this.state.filter.filter.filter(this.state.movies.movies)
-            : this.state.movies.movies;
+            ? this.state.filter.filter.filter(this.state.collection.movies)
+            : this.state.collection.movies;
 
         return (
             <div>

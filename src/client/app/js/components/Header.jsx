@@ -13,6 +13,7 @@ import MovieStore from "../stores/MovieStore.jsx";
 import UserStore from "../stores/UserStore.jsx";
 import DrawerHeader from "./DrawerHeader.jsx";
 import Search from "./Search.jsx";
+import StatsView from "./StatsView.jsx";
 
 
 const menuButtonStyle = {
@@ -91,6 +92,10 @@ class Header extends React.Component {
         });
     }
 }
+
+Header.propTypes = {
+    stats: React.PropTypes.object
+};
 
 Header.contextTypes = {
     router: React.PropTypes.object

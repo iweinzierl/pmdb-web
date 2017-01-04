@@ -10,6 +10,7 @@ import MovieStore from "../stores/MovieStore.jsx";
 import {ActionCreators as MovieActionCreators} from "../actions/movies.jsx";
 import {ActionCreators as UserActionCreators} from "../actions/users.jsx";
 import {MoviesResource, UsersResource} from "../http.jsx";
+import {Stats} from "../domain.jsx";
 
 
 class MainApp extends React.Component {
@@ -29,6 +30,16 @@ class MainApp extends React.Component {
             this.setState(UserStore.getState());
         });
 
+        MovieStore.subscribe(() => {
+            this.setState({
+                stats: Stats.builder()
+                    .withMovies(MovieStore.getState().collection.movies)
+                    .withGenres(MovieStore.getState().collection.genres)
+                    .withFormats(MovieStore.getState().collection.formats)
+                    .build()
+            });
+        });
+
         if (!this.state.accessToken && !this.props.params.accessToken) {
             console.info("Access token not found in state nor in params -> redirect to login");
             this.context.router.push('/login');
@@ -39,7 +50,7 @@ class MainApp extends React.Component {
         return (
             <MuiThemeProvider>
                 <div>
-                    <Header/>
+                    <Header stats={this.state.stats}/>
                     <div className="body">
                         {this.props.children}
                     </div>

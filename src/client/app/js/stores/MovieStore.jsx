@@ -2,9 +2,13 @@
 
 import {createStore} from 'redux'
 
-import movies from '../reducers/index.jsx';
+import collection from '../reducers/index.jsx';
 
-export default createStore(movies, {
-    movies: [],
+export default createStore(collection, {
+    collection: {
+        movies: [],
+        genres: [],
+        formats: []
+    },
     filter: null
 });
