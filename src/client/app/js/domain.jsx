@@ -93,7 +93,7 @@ class MovieBuilder {
         movie.releaseDate = this.releaseDate;
         movie.length = this.length;
         movie.format = this.format;
-        movie.genres = this.genres;
+        movie.genres = this.genres || [];
         return movie;
     }
 }
@@ -147,7 +147,7 @@ class StatsBuilder {
         let formatStat = this.formats[format];
 
         if (formatStat === undefined || formatStat === null) {
-            formatStat  = 1;
+            formatStat = 1;
         }
         else {
             formatStat = formatStat + 1;
@@ -169,7 +169,7 @@ class StatsBuilder {
         let genreStat = this.genres[genre];
 
         if (genreStat === undefined || genreStat === null) {
-            genreStat  = 1;
+            genreStat = 1;
         }
         else {
             genreStat = genreStat + 1;
@@ -190,7 +190,209 @@ class StatsBuilder {
 }
 
 
+/**
+ * A collection of filters relating to movie properties.
+ */
+class MovieFilter {
+
+    constructor(title, genres, formats) {
+        if (title !== null && typeof title !== "string") {
+            throw new TypeError("Expected string, got " + typeof title);
+        }
+        if (genres !== null && !(genres instanceof GenresFilter)) {
+            throw new TypeError("Expected GenresFilter, got " + typeof genres);
+        }
+        if (formats !== null && !(formats instanceof FormatsFilter)) {
+            throw new TypeError("Expected FormatsFilter, got " + typeof formats);
+        }
+
+        this.titleFilter = title;
+        this.genresFilter = genres;
+        this.formatsFilter = formats;
+    }
+
+    getTitleFilter() {
+        return this.titleFilter;
+    }
+
+    getGenresFilter() {
+        return this.genresFilter;
+    }
+
+    getFormatsFilter() {
+        return this.formatsFilter;
+    }
+
+    matches(movie) {
+        return this._matchesTitle(movie) && this._matchesGenres(movie) && this._matchesFormats(movie);
+    }
+
+    _matchesTitle(movie) {
+        return this.titleFilter !== null
+            ? movie.getTitle().toLowerCase().indexOf(this.titleFilter.toLowerCase()) >= 0
+            : true;
+    }
+
+    _matchesGenres(movie) {
+        return this.genresFilter !== null
+            ? this.genresFilter.matches(movie)
+            : true;
+    }
+
+    _matchesFormats(movie) {
+        return this.formatsFilter !== null
+            ? this.formatsFilter.matches(movie)
+            : true;
+    }
+
+    filter(movies) {
+        if (movies === null || movies === undefined) {
+            return [];
+        }
+
+        if (!Array.isArray(movies)) {
+            throw new TypeError("Expected array, got " + typeof movies);
+        }
+
+        return movies.filter(this.matches.bind(this));
+    }
+
+    static builder() {
+        return new MovieFilterBuilder();
+    }
+}
+
+
+class MovieFilterBuilder {
+    constructor() {
+        this.title = undefined;
+        this.genres = undefined;
+        this.formats = undefined;
+    }
+
+    withTitleFilter(title) {
+        if (title !== null && typeof title !== "string") {
+            throw new TypeError("Expected string, got " + typeof title);
+        }
+
+        this.title = title;
+        return this;
+    }
+
+    withGenresFilter(genresFilter) {
+        if (genresFilter !== null && !(genresFilter instanceof GenresFilter)) {
+            throw new TypeError("Expected GenresFilter, got " + typeof genresFilter);
+        }
+
+        this.genres = genresFilter;
+        return this;
+    }
+
+    withFormatsFilter(formatsFilter) {
+        if (formatsFilter !== null && !(formatsFilter instanceof FormatsFilter)) {
+            throw new TypeError("Expected FormatsFilter, got " + typeof formatsFilter);
+        }
+
+        this.formats = formatsFilter;
+        return this;
+    }
+
+    build() {
+        return new MovieFilter(this.title, this.genres, this.formats);
+    }
+}
+
+
+/**
+ * A filter that specifies which genres are enabled or disabled.
+ * Format is:
+ * {
+ *    enabled: [
+ *      "Action",
+ *      "Thriller"
+ *    ],
+ *    disabled: [
+ *      "Comedy",
+ *      "Documentation"
+ *    ]
+ * }
+ */
+class GenresFilter {
+
+    constructor(enabled, disabled) {
+        this.enabled = enabled;
+        this.disabled = disabled;
+    }
+
+    getEnabled() {
+        return this.enabled;
+    }
+
+    getDisabled() {
+        return this.disabled;
+    }
+
+    matches(movie) {
+        let matches = false;
+        movie.getGenres().forEach((genre) => {
+            this.enabled.forEach((fGenre) => {
+                if (fGenre === genre.name) {
+                    matches = true;
+                }
+            });
+        }, this);
+
+        return matches;
+    }
+}
+
+
+/**
+ * A filter that specifies which formats are enabled or disabled.
+ * Format is:
+ * {
+ *    enabled: [
+ *      "BLU-RAY",
+ *      "DVD"
+ *    ],
+ *    disabled: [
+ *      "GOOGLE_MOVIES",
+ *      "AMAZON_VIDEO"
+ *    ]
+ * }
+ */
+class FormatsFilter {
+
+    constructor(enabled, disabled) {
+        this.enabled = enabled;
+        this.disabled = disabled;
+    }
+
+    getEnabled() {
+        return this.enabled;
+    }
+
+    getDisabled() {
+        return this.disabled;
+    }
+
+    matches(movie) {
+        let matches = false;
+        this.enabled.forEach((format) => {
+            if (movie.getFormat() === format) {
+                matches = true;
+            }
+        });
+
+        return matches;
+    }
+}
+
+
 module.exports = {
     Movie: Movie,
-    Stats: Stats
+    Stats: Stats,
+    MovieFilter: MovieFilter,
+    GenresFilter: GenresFilter,
+    FormatsFilter: FormatsFilter
 };

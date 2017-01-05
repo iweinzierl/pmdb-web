@@ -15,9 +15,8 @@ var config =
             tls: 'empty'
         },
         entry: {
-            index: APP_DIR + '/js/index.jsx',
-            login: APP_DIR + '/js/login.jsx',
-            add: APP_DIR + '/js/add.jsx'
+            index: APP_DIR + '/js/sites/index.jsx',
+            authenticated: APP_DIR + '/js/sites/authenticated.jsx'
         },
         output: {
             path: BUILD_DIR,

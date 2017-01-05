@@ -1,6 +1,6 @@
 "use strict";
 
-require("../styles/app.less");
+require("../../styles/app.less");
 
 import React from "react";
 import {render} from "react-dom";
@@ -11,8 +11,8 @@ injectTapEventPlugin();
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import Header from "./header.jsx";
-import MovieForm from "./movie_form.jsx";
+import Header from "../header.jsx";
+import MovieForm from "../movie_form.jsx";
 
 const App = React.createClass({
 

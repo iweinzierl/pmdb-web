@@ -1,37 +1,16 @@
-@screen-phone: ~"screen and (max-width: 449px)";
-@screen-mobile: ~"screen and (min-width: 450px) and (max-width: 799px)";
-@screen-computer: ~"screen and (min-width: 800px)";
-
-@primary-color: rgba(229, 229, 229, 0.31);
-@secondary-color: #4285f4;
-@secondary-color-dark: #195df4;
-@tertiary-color: green;
-
-@text-primary-color: #000;
-@text-secondary-color: #757575;
-@text-tertiary-color: #fff;
-
-@box-shadow: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24);
-@box-shadow-hover: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0, 0, 0, .52), 0 2px 4px rgba(0, 0, 0, .74);
-
-@horizontal-margin: 15px;
-@vertical-margin: 15px;
-@horizontal-margin-list: 15px;
+@import "./base";
 
 @movie-row-height-computer: 75px;
 @movie-row-height-mobile: 125px;
 @movie-row-height-phone: 175px;
 
+@header-height: 55px;
 @header-content-height: 35px;
 
 @container-max-width: 350px;
 
-@font-size-computer: 10pt;
-@font-size-mobile: 13pt;
-@font-size-phone: 13pt;
-
 body {
-  background-color: @primary-color;
+  background-color: @secondary-color;
   padding: 0;
   margin: 0;
 
@@ -93,8 +72,9 @@ div.button:hover {
 }
 
 div.body {
-  width: 100%;
-  height: 100%;
+  width: 95%;
+
+  margin: @vertical-margin+@header-height auto;
 
   display: flex;
   flex-direction: column;
@@ -104,7 +84,7 @@ div.drawer {
 }
 
 div.drawer-header {
-  background-color: @secondary-color-dark;
+  background-color: @primary-color-dark;
   color: @text-tertiary-color;
 
   padding: @vertical-margin @horizontal-margin;
@@ -160,7 +140,7 @@ div.stats {
 
   padding: @vertical-margin @horizontal-margin;
 
-  border: 1px solid @primary-color;
+  border: 1px solid @secondary-color;
 }
 
 div.content {
@@ -174,14 +154,17 @@ div.content {
 
 div.header {
   width: 100%;
-  height: 55px;
+  height: @header-height;
+
+  position: fixed;
+  top: 0;
 
   padding-left: @horizontal-margin;
   padding-right: @horizontal-margin;
 
   box-sizing: border-box;
 
-  background-color: @secondary-color;
+  background-color: @primary-color;
 
   display: flex;
   flex-direction: row;

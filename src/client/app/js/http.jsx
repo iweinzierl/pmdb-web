@@ -12,7 +12,9 @@ function queryParams(params) {
 
 function processError(response, errorCallback) {
     if (response.status == 401 || response.status == 403) {
-        window.location = config.pmdb.paths.login;
+        if (config.pmdb.redirectOnAuthError) {
+            window.location = config.pmdb.paths.login;
+        }
     }
 
     if (errorCallback !== undefined) {
