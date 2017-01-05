@@ -199,10 +199,10 @@ class MovieFilter {
         if (title !== null && typeof title !== "string") {
             throw new TypeError("Expected string, got " + typeof title);
         }
-        if (genres !== null && typeof genres !== GenresFilter) {
+        if (genres !== null && !(genres instanceof GenresFilter)) {
             throw new TypeError("Expected GenresFilter, got " + typeof genres);
         }
-        if (formats !== null && typeof formats !== FormatsFilter) {
+        if (formats !== null && !(formats instanceof FormatsFilter)) {
             throw new TypeError("Expected FormatsFilter, got " + typeof formats);
         }
 
@@ -271,7 +271,7 @@ class MovieFilterBuilder {
     }
 
     withTitleFilter(title) {
-        if (typeof title !== "string") {
+        if (title !== null && typeof title !== "string") {
             throw new TypeError("Expected string, got " + typeof title);
         }
 
@@ -280,7 +280,7 @@ class MovieFilterBuilder {
     }
 
     withGenresFilter(genresFilter) {
-        if (genresFilter !== null && typeof genresFilter !== GenresFilter) {
+        if (genresFilter !== null && !(genresFilter instanceof GenresFilter)) {
             throw new TypeError("Expected GenresFilter, got " + typeof genresFilter);
         }
 
@@ -289,7 +289,7 @@ class MovieFilterBuilder {
     }
 
     withFormatsFilter(formatsFilter) {
-        if (formatsFilter !== null && typeof formatsFilter !== FormatsFilter) {
+        if (formatsFilter !== null && !(formatsFilter instanceof FormatsFilter)) {
             throw new TypeError("Expected FormatsFilter, got " + typeof formatsFilter);
         }
 
@@ -336,7 +336,7 @@ class GenresFilter {
         let matches = false;
         movie.getGenres().forEach((genre) => {
             this.enabled.forEach((fGenre) => {
-                if (fGenre === genre) {
+                if (fGenre === genre.name) {
                     matches = true;
                 }
             });
