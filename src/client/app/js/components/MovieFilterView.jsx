@@ -34,7 +34,6 @@ class MovieFilterView extends React.Component {
     render() {
         return (
             <div className="filter-group">
-                <label>Filter</label>
                 <GenreFilterView genres={this.props.genres} onFilterChange={this.props.onGenreFilterChanged}/>
                 <FormatFilterView formats={this.props.formats} onFilterChange={this.props.onFormatFilterChanged}/>
             </div>
@@ -63,7 +62,8 @@ class GenreFilterView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            genres: {}
+            genres: {},
+            selected: true
         };
     }
 
@@ -103,11 +103,33 @@ class GenreFilterView extends React.Component {
             );
         });
 
+        const allText = this.state.selected
+            ? "Deselect All Genres"
+            : "Select All Genres";
+
         return (
             <div key="genre" className="filter-block">
+                <a className="link" onClick={this.toggleAll.bind(this)}>{allText}</a>
                 {genresList}
             </div>
         );
+    }
+
+    toggleAll() {
+        const gs = {};
+        Object.keys(this.state.genres).forEach((genre) => {
+            gs[genre] = {
+                label: genre,
+                value: genre,
+                checked: !this.state.selected,
+                enabled: this.state.selected ? "off" : "on"
+            };
+        });
+
+        this.setState({
+            genres: gs,
+            selected: !this.state.selected
+        }, this.notify);
     }
 
     onGenresChange(evt) {
@@ -160,11 +182,16 @@ class FormatFilterView extends React.Component {
                 "AMAZON_VIDEO": "Amazon Video",
                 "GOOGLE_MOVIES": "Google Movies"
             },
-            formats: {}
+            formats: {},
+            selected: true
         };
     }
 
-    componentWillMount() {
+    componentWillReceiveProps() {
+        if (debugEnabled()) {
+            console.debug("GenreFilterView -> component will receive props -> props = ", this.props);
+        }
+
         const self = this;
         const formats = this.props.formats;
 
@@ -198,11 +225,33 @@ class FormatFilterView extends React.Component {
             );
         });
 
+        const allText = this.state.selected
+            ? "Deselect All Formats"
+            : "Select All Formats";
+
         return (
             <div key="format" className="filter-block">
+                <a className="link" onClick={this.toggleAll.bind(this)}>{allText}</a>
                 {formatList}
             </div>
         );
+    }
+
+    toggleAll() {
+        const formats = {};
+        Object.keys(this.state.formats).map((format) => {
+            formats[format] = {
+                label: this.state.formatLabels[format],
+                value: format,
+                enabled: this.state.selected ? "off" : "on",
+                checked: !this.state.selected
+            }
+        });
+
+        this.setState({
+            formats: formats,
+            selected: !this.state.selected
+        }, this.notify);
     }
 
     onFormatChange(evt) {
