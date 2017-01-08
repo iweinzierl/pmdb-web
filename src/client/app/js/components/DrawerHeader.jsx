@@ -6,10 +6,14 @@ import User from "./User.jsx";
 class DrawerHeader extends React.Component {
 
     render() {
+        let user = this.props.user.name !== "" && this.props.user.profileImage !== ""
+            ? <User user={this.props.user}/>
+            : null;
+
         return (
             <div className="drawer-header" onClick={this.props.clickedHeader}>
                 <div className="drawer-header-title">PMDB</div>
-                <User user={this.props.user}/>
+                {user}
             </div>
         );
     }

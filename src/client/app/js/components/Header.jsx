@@ -36,11 +36,17 @@ class Header extends React.Component {
             user: UserStore.getState().user
         };
 
-        UserStore.subscribe(() => {
+        this.unmountUserStore = UserStore.subscribe(() => {
             this.setState({
                 user: UserStore.getState().user
             });
         });
+    }
+
+    componentWillUnmount() {
+        if (this.unmountUserStore) {
+            this.unmountUserStore();
+        }
     }
 
     render() {
