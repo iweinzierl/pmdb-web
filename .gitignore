@@ -1,5 +1,7 @@
 *.iml
 address.json
+config.dev.js
+config.repo.js
 
 .idea
 node_modules
