@@ -1,7 +1,11 @@
 "use strict";
 
 import React from "react";
-import MovieStore from "../stores/MovieStore.jsx";
+import config from "../../../../../config";
+
+function debugEnabled() {
+    return config.pmdb.debug.components && config.pmdb.debug.components.MovieFilterView;
+}
 
 /**
  * React Component to manage movie filters.
@@ -31,14 +35,22 @@ class MovieFilterView extends React.Component {
         return (
             <div className="filter-group">
                 <label>Filter</label>
-                <GenreFilterView onFilterChange={this.props.onGenreFilterChanged}/>
-                <FormatFilterView onFilterChange={this.props.onFormatFilterChanged}/>
+                <GenreFilterView genres={this.props.genres} onFilterChange={this.props.onGenreFilterChanged}/>
+                <FormatFilterView formats={this.props.formats} onFilterChange={this.props.onFormatFilterChanged}/>
             </div>
         );
+    }
+
+    componentWillReceiveProps() {
+        if (debugEnabled()) {
+            console.debug("MovieFilterView -> component will receive props -> props = ", this.props);
+        }
     }
 }
 
 MovieFilterView.propTypes = {
+    genres: React.PropTypes.array,
+    formats: React.PropTypes.array,
     onGenreFilterChanged: React.PropTypes.func.isRequired,
     onFormatFilterChanged: React.PropTypes.func.isRequired
 };
@@ -55,23 +67,25 @@ class GenreFilterView extends React.Component {
         };
     }
 
-    componentWillMount() {
-        MovieStore.subscribe(() => {
-            const genres = MovieStore.getState().collection.genres;
-            if (genres && genres.length != Object.keys(this.state.genres).length) {
-                const gs = {};
-                genres.forEach((genre) => {
-                    gs[genre] = {
-                        label: genre,
-                        value: genre,
-                        checked: true,
-                        enabled: "on"
-                    };
-                });
+    componentWillReceiveProps() {
+        if (debugEnabled()) {
+            console.debug("GenreFilterView -> component will receive props -> props = ", this.props);
+        }
 
-                this.setState({genres: gs});
-            }
-        });
+        const genres = this.props.genres;
+        if (genres && genres.length != Object.keys(this.state.genres).length) {
+            const gs = {};
+            genres.forEach((genre) => {
+                gs[genre] = {
+                    label: genre,
+                    value: genre,
+                    checked: true,
+                    enabled: "on"
+                };
+            });
+
+            this.setState({genres: gs});
+        }
     }
 
     render() {
@@ -127,6 +141,7 @@ class GenreFilterView extends React.Component {
 }
 
 GenreFilterView.propTypes = {
+    genres: React.PropTypes.array,
     onFilterChange: React.PropTypes.func.isRequired
 };
 
@@ -151,23 +166,21 @@ class FormatFilterView extends React.Component {
 
     componentWillMount() {
         const self = this;
-        MovieStore.subscribe(() => {
-            const formats = MovieStore.getState().collection.formats;
+        const formats = this.props.formats;
 
-            if (formats && formats.length != Object.keys(this.state.formats).length) {
-                const fs = {};
-                formats.forEach((format) => {
-                    fs[format] = {
-                        label: this.state.formatLabels[format],
-                        value: format,
-                        checked: true,
-                        enabled: "on"
-                    };
+        if (formats && formats.length != Object.keys(this.state.formats).length) {
+            const fs = {};
+            formats.forEach((format) => {
+                fs[format] = {
+                    label: this.state.formatLabels[format],
+                    value: format,
+                    checked: true,
+                    enabled: "on"
+                };
 
-                    self.setState({formats: fs});
-                });
-            }
-        });
+                self.setState({formats: fs});
+            });
+        }
     }
 
     render() {
@@ -223,6 +236,7 @@ class FormatFilterView extends React.Component {
 }
 
 FormatFilterView.propTypes = {
+    formats: React.PropTypes.array,
     onFilterChange: React.PropTypes.func.isRequired
 };
 

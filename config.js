@@ -14,10 +14,16 @@ module.exports = {
         "redirectOnError": false,
         "redirectOnAuthError": false,
         "debug": {
+            "apps": {
+                "MovieListApp": false
+            },
+            "components": {
+                "MovieFilterView": false
+            },
             "reducer": {
                 "user": false,
-                "movies": true,
-                "filter": true
+                "movies": false,
+                "filter": false
             }
         }
     },
