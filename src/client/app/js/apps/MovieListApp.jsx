@@ -24,17 +24,12 @@ class MovieListApp extends React.Component {
     }
 
     componentWillMount() {
-        this.unsubscribeMovieStore = MovieStore.subscribe(() => {
-            const newState = MovieStore.getState();
-            this.setState(newState);
-        });
-
         if (!UserStore.getState().accessToken) {
             console.info("Access token not found in state -> redirect to login");
             this.context.router.push('/login');
         }
 
-        MovieStore.subscribe(() => {
+        this.unsubscribeMovieStore = MovieStore.subscribe(() => {
             this.setState({
                 movies: MovieStore.getState().collection.movies,
                 filter: MovieStore.getState().filter
